@@ -1,10 +1,12 @@
 package com.example.be8arm.application.entity;
 
-import jakarta.persistence.Id;
+import com.example.be8arm.domain.member.member.entity.Member;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;

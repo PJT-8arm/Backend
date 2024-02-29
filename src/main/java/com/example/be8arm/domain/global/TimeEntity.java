@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,6 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-@Entity
 public class TimeEntity extends IdEntity {
 	@CreationTimestamp
 	private LocalDateTime createDate;

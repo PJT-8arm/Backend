@@ -1,6 +1,5 @@
 package com.example.be8arm.domain.global;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @MappedSuperclass
 @Getter
-@Entity
 public class IdEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
