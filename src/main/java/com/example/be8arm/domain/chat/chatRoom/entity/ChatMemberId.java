@@ -1,4 +1,4 @@
-package com.example.be8arm.chat.chatRoom.entity;
+package com.example.be8arm.domain.chat.chatRoom.entity;
 
 import java.io.Serializable;
 
@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ChatMemberId implements Serializable {
+
 	private Long chatRoomId;
+
 	private Long memberId;
 }

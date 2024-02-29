@@ -1,25 +1,24 @@
-package com.example.be8arm.application.entity;
+package com.example.be8arm.domain.recruitment.application.entity;
 
 import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.global.TimeEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-public class Application {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
+@Getter
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public class Application extends TimeEntity {
 	@ManyToOne
 	@JoinColumn(name = "member_Id", nullable = false)
 	private Member member;
