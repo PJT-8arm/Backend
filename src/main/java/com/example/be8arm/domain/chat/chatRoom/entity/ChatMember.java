@@ -1,4 +1,4 @@
-package com.example.be8arm.chat.chatRoom.entity;
+package com.example.be8arm.domain.chat.chatRoom.entity;
 
 import java.time.LocalDateTime;
 

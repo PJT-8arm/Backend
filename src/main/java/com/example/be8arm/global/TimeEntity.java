@@ -1,4 +1,4 @@
-package com.example.be8arm.domain.global;
+package com.example.be8arm.global;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +22,7 @@ import lombok.experimental.SuperBuilder;
 public class TimeEntity extends IdEntity {
 	@CreationTimestamp
 	private LocalDateTime createDate;
+
 	@UpdateTimestamp
 	private LocalDateTime modifyDate;
 }

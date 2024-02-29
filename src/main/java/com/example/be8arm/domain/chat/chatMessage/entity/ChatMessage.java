@@ -1,6 +1,5 @@
-package com.example.be8arm.chat.chatMessage.entity;
+package com.example.be8arm.domain.chat.chatMessage.entity;
 
-import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
@@ -8,35 +7,28 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.example.be8arm.chat.chatRoom.entity.ChatRoom;
+import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
+import com.example.be8arm.global.IdEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Setter
 @Getter
 @AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
-@Builder
+@SuperBuilder
 @ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
-public class ChatMessage {
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@EqualsAndHashCode.Include
-	private Long id;
-
+public class ChatMessage extends IdEntity {
 	@CreatedDate
 	@Getter
 	private LocalDateTime createDate;

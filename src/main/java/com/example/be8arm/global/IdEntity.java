@@ -1,4 +1,4 @@
-package com.example.be8arm.domain.global;
+package com.example.be8arm.global;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
