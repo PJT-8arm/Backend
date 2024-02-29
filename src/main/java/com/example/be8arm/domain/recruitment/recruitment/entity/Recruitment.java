@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -45,5 +46,5 @@ public class Recruitment {
 
     private String routine;
 
-    private Timestamp duration;
+    private LocalTime duration;
 }
