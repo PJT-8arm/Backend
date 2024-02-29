@@ -1,7 +1,5 @@
 package com.example.be8arm.domain.member.member.entity;
 
-import java.math.BigInteger;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,12 +21,12 @@ public class Member {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private BigInteger memberId;
+	private Long memberId;
 
 	private String loginId;  // 로그인 ID
 	private String password;
-	private String username; // 실명
+	private String name; // 실명
 	private String nickname;
 
-	private String profile; // URL
+	private String imgUrl; // 프로필 사진
 }
