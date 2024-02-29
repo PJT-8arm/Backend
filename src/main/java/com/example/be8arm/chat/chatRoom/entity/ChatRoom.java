@@ -29,14 +29,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Setter
 @Getter
 @AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
-@SuperBuilder
+@Builder
 @ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 public class ChatRoom {
