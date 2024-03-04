@@ -42,4 +42,5 @@ public class Recruitment extends TimeEntity {
 	private String routine;
 
 	private LocalTime duration;
+
 }
