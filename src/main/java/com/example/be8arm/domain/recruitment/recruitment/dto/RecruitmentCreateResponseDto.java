@@ -35,20 +35,4 @@ public class RecruitmentCreateResponseDto {
 
     private LocalTime duration;
 
-    public RecruitmentCreateResponseDto(Long id, Member member, String title, String content, LocalDateTime recruit_date, String place, String partnerGender, Integer partnerAge, String routine, LocalTime duration) {
-        this.id = id;
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.recruit_date = recruit_date;
-        this.place = place;
-        this.partnerGender = partnerGender;
-        this.partnerAge = partnerAge;
-        this.routine = routine;
-        this.duration = duration;
-    }
-
-    public RecruitmentCreateResponseDto(Recruitment recruitment) {
-
-    }
 }

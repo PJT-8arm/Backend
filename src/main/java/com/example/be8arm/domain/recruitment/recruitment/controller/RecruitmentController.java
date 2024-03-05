@@ -27,6 +27,8 @@ public class RecruitmentController {
             @AuthenticationPrincipal UserPrincipal user,
             @ModelAttribute RecruitmentCreateRequestDto recruitmentCreateRequestDto){
 
-        recruitmentService.addRecruitment(user.getMember(), recruitmentCreateRequestDto);
+        RecruitmentCreateResponseDto recruitmentCreateResponseDto = recruitmentService.addRecruitment(user.getMember(), recruitmentCreateRequestDto);
+
+        return ResponseEntity.ok(recruitmentCreateResponseDto);
     }
 }
