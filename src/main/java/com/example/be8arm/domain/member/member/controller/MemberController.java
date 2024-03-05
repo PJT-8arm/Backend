@@ -14,7 +14,9 @@ import com.example.be8arm.domain.member.member.dto.MemberDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.global.jwt.JwtToken;
+import com.example.be8arm.global.jwt.JwtTokenProvider;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 
 	private final MemberService memberService;
+	private final JwtTokenProvider jwtTokenProvider;
 
 	@PostMapping("/join")
 	public ResponseEntity<MemberDto> signUp(@RequestBody SignUpDto signUpDto) {
@@ -58,4 +61,9 @@ public class MemberController {
 		}
 	}
 
+	@PostMapping("/logout")
+	public ResponseEntity<String> logOut(HttpServletRequest request) {
+		jwtTokenProvider.invalidateToken(request);
+		return ResponseEntity.ok("로그아웃 성공");
+	}
 }

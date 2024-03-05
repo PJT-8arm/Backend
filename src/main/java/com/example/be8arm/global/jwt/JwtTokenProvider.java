@@ -23,6 +23,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -118,6 +119,24 @@ public class JwtTokenProvider {
 		} catch (ExpiredJwtException e) {
 			return e.getClaims();
 		}
+	}
+
+	public String resolveToken(HttpServletRequest request) {
+		// Authorization 헤더에서 토큰 추출
+		String bearerToken = request.getHeader("Authorization");
+		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7); // "Bearer " 다음의 토큰 부분만 반환
+		}
+		return null;
+	}
+
+	public void invalidateToken(HttpServletRequest request) {
+		// 클라이언트에게 전달된 토큰을 무효화
+		String token = resolveToken(request);
+		// 토큰을 무효화하는 추가적인 작업 수행 (예: 블랙리스트에 추가)
+
+		// 블랙리스트에 추가한 토큰은 검증에서 실패하도록 설정
+		// (JwtAuthenticationFilter의 doFilter 메서드에서 검증 시 블랙리스트 체크 추가 필요)
 	}
 
 }
