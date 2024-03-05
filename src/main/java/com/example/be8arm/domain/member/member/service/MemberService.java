@@ -1,8 +1,5 @@
 package com.example.be8arm.domain.member.member.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -11,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.be8arm.domain.member.member.JwtTokenProvider;
 import com.example.be8arm.domain.member.member.dto.JwtToken;
-import com.example.be8arm.domain.member.member.dto.MemberDto;
-import com.example.be8arm.domain.member.member.dto.SignupDto;
 import com.example.be8arm.domain.member.member.repository.MemberRepository;
 
 import jakarta.transaction.Transactional;
@@ -46,19 +41,6 @@ public class MemberService {
 
 		return jwtToken;
 	}
-
-	@Transactional
-	// @Override
-	public MemberDto signUp(SignupDto signupDto) {
-		if (memberRepository.existsByUsername(signupDto.getUsername())) {
-			throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다.");
-		}
-		// Password 암호화
-		String encodedPassword = passwordEncoder.encode(signupDto.getPassword());
-		List<String> roles = new ArrayList<>();
-		roles.add("USER");  // USER 권한 부여
-		return MemberDto.toDto(memberRepository.save(signupDto.toEntity(encodedPassword, roles)));
-	}
-
+	
 }
 

@@ -1,6 +1,5 @@
 package com.example.be8arm.domain.member.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.member.member.dto.JwtToken;
 import com.example.be8arm.domain.member.member.dto.LoginDto;
-import com.example.be8arm.domain.member.member.dto.MemberDto;
-import com.example.be8arm.domain.member.member.dto.SignupDto;
 import com.example.be8arm.domain.member.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -51,11 +48,4 @@ public class MemberController {
 			return authentication.getName();
 		}
 	}
-
-	@PostMapping("/join")
-	public ResponseEntity<MemberDto> signUp(@RequestBody SignupDto signupDto) {
-		MemberDto savedMemberDto = memberService.signUp(signupDto);
-		return ResponseEntity.ok(savedMemberDto);
-	}
-
 }
