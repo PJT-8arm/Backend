@@ -107,13 +107,13 @@ public class ChatRoomController {
 		@AuthenticationPrincipal UserDetails user) {
 
 		if (!chatRoomService.isIncludeMe(user.getId(), chatRoomId)) {
-			throw new RuntimeException("관련 권한이 없습니다.");
+			return ResponseEntity.badRequest().body("권한이 없습니다.");
 		}
 
 		chatMessageService.writeAndSend(chatRoomId, user.getName(), "퇴장", "deleted", user.getId());
 
-		if (!chatRoomService.exitChatRoomByMemberIdAndChatRoomId(user.getId(), chatRoomId)) {
-			throw new RuntimeException("채팅방을 나가는데 실패했습니다.");
+		if (!chatRoomService.deleteChatRoomByMemberIdAndChatRoomId(user.getId(), chatRoomId)) {
+			return ResponseEntity.unprocessableEntity().body("채팅방을 나가는데 실패했습니다.");
 		}
 
 		return ResponseEntity.ok("성공");
@@ -126,7 +126,7 @@ public class ChatRoomController {
 		@RequestBody final ModifyRequestBody modifyBody) {
 
 		if (!chatRoomService.isIncludeMe(user.getId(), chatRoomId)) {
-			throw new RuntimeException("관련 권한이 없습니다.");
+			return ResponseEntity.badRequest().body("권한이 없습니다.");
 		}
 
 		chatRoomService.modifyChatRoomName(user.getId(), chatRoomId, modifyBody.getChatRoomName());
