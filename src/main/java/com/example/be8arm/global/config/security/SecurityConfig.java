@@ -10,8 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.be8arm.domain.member.member.JwtAuthenticationFilter;
-import com.example.be8arm.domain.member.member.JwtTokenProvider;
+import com.example.be8arm.global.jwt.JwtAuthenticationFilter;
+import com.example.be8arm.global.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

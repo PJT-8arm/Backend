@@ -1,4 +1,4 @@
-package com.example.be8arm.domain.member.member;
+package com.example.be8arm.global.jwt;
 
 import java.io.IOException;
 

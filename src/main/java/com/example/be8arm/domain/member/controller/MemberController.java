@@ -1,5 +1,6 @@
 package com.example.be8arm.domain.member.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.member.member.dto.JwtToken;
-import com.example.be8arm.domain.member.member.dto.LoginDto;
+import com.example.be8arm.domain.member.member.dto.LogInDto;
+import com.example.be8arm.domain.member.member.dto.MemberDto;
+import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +28,7 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@PostMapping("/login")
-	public JwtToken logIn(@RequestBody LoginDto loginDto) {
+	public JwtToken logIn(@RequestBody LogInDto loginDto) {
 		String username = loginDto.getUsername();
 		String password = loginDto.getPassword();
 		JwtToken jwtToken = memberService.logIn(username, password);
@@ -47,5 +50,11 @@ public class MemberController {
 			}
 			return authentication.getName();
 		}
+	}
+
+	@PostMapping("/join")
+	public ResponseEntity<MemberDto> signUp(@RequestBody SignUpDto signUpDto) {
+		MemberDto savedMemberDto = memberService.signUp(signUpDto);
+		return ResponseEntity.ok(savedMemberDto);
 	}
 }

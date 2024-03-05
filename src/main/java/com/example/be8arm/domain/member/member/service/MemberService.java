@@ -1,14 +1,19 @@
 package com.example.be8arm.domain.member.member.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.be8arm.domain.member.member.JwtTokenProvider;
 import com.example.be8arm.domain.member.member.dto.JwtToken;
+import com.example.be8arm.domain.member.member.dto.MemberDto;
+import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.repository.MemberRepository;
+import com.example.be8arm.global.jwt.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +46,19 @@ public class MemberService {
 
 		return jwtToken;
 	}
-	
+
+	@Transactional
+	// @Override
+	public MemberDto signUp(SignUpDto signUpDto) {
+		if (memberRepository.existsByUsername(signUpDto.getUsername())) {
+			throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다.");
+		}
+		// Password 암호화
+		String encodedPassword = passwordEncoder.encode(signUpDto.getPassword());
+		List<String> roles = new ArrayList<>();
+		roles.add("USER");  // USER 권한 부여
+		return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
+	}
+
 }
 
