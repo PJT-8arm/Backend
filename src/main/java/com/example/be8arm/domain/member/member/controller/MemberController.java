@@ -27,6 +27,12 @@ public class MemberController {
 
 	private final MemberService memberService;
 
+	@PostMapping("/join")
+	public ResponseEntity<MemberDto> signUp(@RequestBody SignUpDto signUpDto) {
+		MemberDto savedMemberDto = memberService.signUp(signUpDto);
+		return ResponseEntity.ok(savedMemberDto);
+	}
+
 	@PostMapping("/login")
 	public JwtToken logIn(@RequestBody LogInDto loginDto) {
 		String username = loginDto.getUsername();
@@ -52,9 +58,4 @@ public class MemberController {
 		}
 	}
 
-	@PostMapping("/join")
-	public ResponseEntity<MemberDto> signUp(@RequestBody SignUpDto signUpDto) {
-		MemberDto savedMemberDto = memberService.signUp(signUpDto);
-		return ResponseEntity.ok(savedMemberDto);
-	}
 }
