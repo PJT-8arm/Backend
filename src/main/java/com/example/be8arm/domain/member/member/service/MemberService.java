@@ -9,10 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.be8arm.domain.member.member.dto.JwtToken;
 import com.example.be8arm.domain.member.member.dto.MemberDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.repository.MemberRepository;
+import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;

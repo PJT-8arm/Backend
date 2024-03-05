@@ -1,4 +1,4 @@
-package com.example.be8arm.domain.member.member.dto;
+package com.example.be8arm.global.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
