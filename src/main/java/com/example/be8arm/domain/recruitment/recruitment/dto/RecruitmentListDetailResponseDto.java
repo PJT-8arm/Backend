@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RecruitmentCreateResponseDto {
+public class RecruitmentListDetailResponseDto {
 
     private Long id;
 
@@ -35,7 +35,7 @@ public class RecruitmentCreateResponseDto {
 
     private LocalTime duration;
 
-    public RecruitmentCreateResponseDto(Recruitment recruitment) {
+    public RecruitmentListDetailResponseDto(Recruitment recruitment) {
         this.id = recruitment.getId();
         this.member = recruitment.getMember();
         this.title = recruitment.getTitle();
