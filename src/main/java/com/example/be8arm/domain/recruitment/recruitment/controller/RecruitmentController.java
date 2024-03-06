@@ -3,6 +3,7 @@ package com.example.be8arm.domain.recruitment.recruitment.controller;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateRequestDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDto;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
 import com.example.be8arm.domain.recruitment.recruitment.service.RecruitmentService;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +32,16 @@ public class RecruitmentController {
 
         return ResponseEntity.ok(recruitmentCreateResponseDto);
     }
+
+    @PutMapping("/update/{id}") // 수정
+    public ResponseEntity<RecruitmentUpdateResponseDto> recruitmentUpdate(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserPrincipal user,
+        @ModelAttribute RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
+
+        RecruitmentUpdateResponseDto recruitmentUpdateResponseDto = recruitmentService.updateRecruitment(id, user.getMember(), recruitmentUpdateRequestDto);
+
+        return ResponseEntity.ok(recruitmentUpdateResponseDto);
+    }
+
 }
