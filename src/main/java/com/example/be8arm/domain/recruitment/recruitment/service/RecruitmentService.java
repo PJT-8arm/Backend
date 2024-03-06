@@ -4,6 +4,8 @@ import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateRequestDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDetailResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
 import com.example.be8arm.domain.recruitment.recruitment.repository.RecruitmentRepository;
 
@@ -11,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +46,28 @@ public class RecruitmentService {
         recruitmentRepository.save(recruitment);
 
         return new RecruitmentCreateResponseDto(recruitment);
+    }
+
+    public List<RecruitmentListResponseDto> findRecruitmentList() {
+        List<RecruitmentListResponseDto> recruitments = recruitmentRepository.findAll()
+                .stream()
+                .map(recruitment -> new RecruitmentListResponseDto(
+                        recruitment.getMember(),
+                        recruitment.getTitle(),
+                        recruitment.getRecruit_date(),
+                        recruitment.getPartnerGender(),
+                        recruitment.getPartnerAge(),
+                        recruitment.getRoutine()
+                        ))
+                .toList();
+        return recruitments;
+    }
+
+    public RecruitmentListDetailResponseDto findRecruitment(Long id){
+        Recruitment recruitment = recruitmentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 모집 글이 존재하지 않습니다."));
+
+        return new RecruitmentListDetailResponseDto(recruitment);
     }
 
     @Transactional
