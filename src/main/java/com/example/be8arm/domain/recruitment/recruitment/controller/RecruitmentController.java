@@ -29,7 +29,7 @@ public class RecruitmentController {
     @PostMapping("/write") // 작성
     public ResponseEntity<RecruitmentCreateResponseDto> recruitmentAdd(
             @AuthenticationPrincipal Member user,
-            @ModelAttribute RecruitmentCreateRequestDto recruitmentCreateRequestDto){
+            @RequestBody RecruitmentCreateRequestDto recruitmentCreateRequestDto){
 
         RecruitmentCreateResponseDto recruitmentCreateResponseDto = recruitmentService.addRecruitment(user, recruitmentCreateRequestDto);
 
@@ -40,7 +40,7 @@ public class RecruitmentController {
     public ResponseEntity<RecruitmentUpdateResponseDto> recruitmentUpdate(
         @PathVariable Long id,
         @AuthenticationPrincipal Member user,
-        @ModelAttribute RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
+        @RequestBody RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
 
         RecruitmentUpdateResponseDto recruitmentUpdateResponseDto = recruitmentService.updateRecruitment(id, user, recruitmentUpdateRequestDto);
 
