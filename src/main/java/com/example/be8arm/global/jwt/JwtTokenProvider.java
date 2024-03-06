@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.example.be8arm.domain.member.member.entity.Member;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -46,6 +48,14 @@ public class JwtTokenProvider {
 
 	// Member 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
 	public JwtToken generateToken(Authentication authentication) {
+
+		Member member = (Member)authentication.getPrincipal();
+
+		String username = member.getUsername();
+		String nickname = member.getNickname();
+		String name = member.getName();
+		String imgUrl = member.getImgUrl();
+
 		// 권한 가져오기
 		String authorities = authentication.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)
@@ -58,6 +68,10 @@ public class JwtTokenProvider {
 		String accessToken = Jwts.builder()
 			.setSubject(authentication.getName())
 			.claim("auth", authorities)
+			.claim("username", username)
+			.claim("nickname", nickname)
+			.claim("name", name)
+			.claim("imgUrl", imgUrl)
 			.setExpiration(accessTokenExpiresIn)
 			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
