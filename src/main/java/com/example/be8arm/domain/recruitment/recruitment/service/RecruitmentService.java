@@ -3,11 +3,10 @@ package com.example.be8arm.domain.recruitment.recruitment.service;
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateRequestDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateResponseDto;
-import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateRequestDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
 import com.example.be8arm.domain.recruitment.recruitment.repository.RecruitmentRepository;
-import lombok.Builder;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +43,7 @@ public class RecruitmentService {
     }
 
     @Transactional
-    public RecruitmentUpdateResponseDto updateRecruitment(Long id, Member member, RecruitmentUpdateRequestDto recruitmentUpdateRequestDto) {
+    public RecruitmentUpdateResponseDto updateRecruitment(Long id, Member member, RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
 
         Recruitment existingRecruitment = recruitmentRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("해당 ID의 모집 공고를 찾을 수 없습니다."));

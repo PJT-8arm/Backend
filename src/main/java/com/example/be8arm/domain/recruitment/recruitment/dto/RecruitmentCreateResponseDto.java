@@ -35,4 +35,16 @@ public class RecruitmentCreateResponseDto {
 
     private LocalTime duration;
 
+    public RecruitmentCreateResponseDto(Recruitment recruitment) {
+        this.id = recruitment.getId();
+        this.member = recruitment.getMember();
+        this.title = recruitment.getTitle();
+        this.content = recruitment.getContent();
+        this.recruit_date = recruitment.getRecruit_date();
+        this.place = recruitment.getPlace();
+        this.partnerGender = recruitment.getPartnerGender();
+        this.partnerAge = recruitment.getPartnerAge();
+        this.routine = recruitment.getRoutine();
+        this.duration = recruitment.getDuration();
+    }
 }
