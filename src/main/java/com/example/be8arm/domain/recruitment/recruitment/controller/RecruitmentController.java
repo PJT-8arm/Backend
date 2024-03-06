@@ -1,7 +1,11 @@
 package com.example.be8arm.domain.recruitment.recruitment.controller;
 
+import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateRequestDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDto;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDetailResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.service.RecruitmentService;
@@ -24,13 +28,25 @@ public class RecruitmentController {
 
     @PostMapping("/write") // 작성
     public ResponseEntity<RecruitmentCreateResponseDto> recruitmentAdd(
-            @AuthenticationPrincipal UserPrincipal user,
-            @ModelAttribute RecruitmentCreateRequestDto recruitmentCreateRequestDto){
+            @AuthenticationPrincipal Member user,
+            @RequestBody RecruitmentCreateRequestDto recruitmentCreateRequestDto){
 
-        RecruitmentCreateResponseDto recruitmentCreateResponseDto = recruitmentService.addRecruitment(user.getMember(), recruitmentCreateRequestDto);
+        RecruitmentCreateResponseDto recruitmentCreateResponseDto = recruitmentService.addRecruitment(user, recruitmentCreateRequestDto);
 
         return ResponseEntity.ok(recruitmentCreateResponseDto);
     }
+
+    @PutMapping("/update/{id}") // 수정
+    public ResponseEntity<RecruitmentUpdateResponseDto> recruitmentUpdate(
+        @PathVariable Long id,
+        @AuthenticationPrincipal Member user,
+        @RequestBody RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
+
+        RecruitmentUpdateResponseDto recruitmentUpdateResponseDto = recruitmentService.updateRecruitment(id, user, recruitmentUpdateRequestDto);
+
+        return ResponseEntity.ok(recruitmentUpdateResponseDto);
+    }
+
 
     @GetMapping("/list") // 목록
     public ResponseEntity<List<RecruitmentListResponseDto>> recruitmentList(){

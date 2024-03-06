@@ -3,11 +3,12 @@ package com.example.be8arm.domain.recruitment.recruitment.service;
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateRequestDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDetailResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
 import com.example.be8arm.domain.recruitment.recruitment.repository.RecruitmentRepository;
-import lombok.Builder;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -67,5 +68,26 @@ public class RecruitmentService {
                 .orElseThrow(() -> new NoSuchElementException("해당 모집 글이 존재하지 않습니다."));
 
         return new RecruitmentListDetailResponseDto(recruitment);
+    }
+
+    @Transactional
+    public RecruitmentUpdateResponseDto updateRecruitment(Long id, Member member, RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
+
+        Recruitment existingRecruitment = recruitmentRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("해당 ID의 모집 공고를 찾을 수 없습니다."));
+
+        existingRecruitment.setTitle(recruitmentUpdateRequestDto.getTitle());
+        existingRecruitment.setContent(recruitmentUpdateRequestDto.getContent());
+        existingRecruitment.setRecruit_date(recruitmentUpdateRequestDto.getRecruit_date());
+        existingRecruitment.setPlace(recruitmentUpdateRequestDto.getPlace());
+        existingRecruitment.setPartnerGender(recruitmentUpdateRequestDto.getPartnerGender());
+        existingRecruitment.setPartnerAge(recruitmentUpdateRequestDto.getPartnerAge());
+        existingRecruitment.setRoutine(recruitmentUpdateRequestDto.getRoutine());
+        existingRecruitment.setDuration(recruitmentUpdateRequestDto.getDuration());
+
+        // 기존 엔터티를 업데이트하고 저장
+        recruitmentRepository.save(existingRecruitment);
+
+        return new RecruitmentUpdateResponseDto(existingRecruitment);
     }
 }
