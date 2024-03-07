@@ -89,4 +89,12 @@ public class RecruitmentService {
 
         return new RecruitmentUpdateResponseDto(existingRecruitment);
     }
+
+    @Transactional
+    public void deleteRecruitment(Member member, Long id) {
+        Recruitment existingRecruitment = recruitmentRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("해당 ID의 모집 공고를 찾을 수 없습니다."));
+
+        recruitmentRepository.delete(existingRecruitment);
+    }
 }
