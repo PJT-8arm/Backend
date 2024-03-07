@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   config:
     activate:
@@ -22,6 +24,8 @@ spring:
       highlight_sql: true
       use_sql_comments: true
 
+jwt:
+  secret: ${jwt.secret}
 
 custom:
   site:

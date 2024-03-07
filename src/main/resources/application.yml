@@ -1,11 +1,8 @@
-server:
-  port: 8080
 spring:
   profiles:
     group:
       dev:
         - dev
-        - secret
         - jwt
       prod:
         - prod
