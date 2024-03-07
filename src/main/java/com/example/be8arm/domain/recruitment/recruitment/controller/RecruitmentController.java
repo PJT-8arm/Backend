@@ -35,6 +35,7 @@ public class RecruitmentController {
     }
 
     @GetMapping("/list") // 목록
+    // TODO member LAZY 수정
     public ResponseEntity<List<RecruitmentListResponseDto>> recruitmentList(){
         List<RecruitmentListResponseDto> recruitmentList = recruitmentService.findRecruitmentList();
         return ResponseEntity.ok(recruitmentList);
