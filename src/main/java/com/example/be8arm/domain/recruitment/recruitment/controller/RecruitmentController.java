@@ -61,9 +61,9 @@ public class RecruitmentController {
     @DeleteMapping("/delete/{id}") // 삭제
     public ResponseEntity<String> recruitmentDelete(
         @PathVariable Long id,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @AuthenticationPrincipal UserPrincipal user) {
 
-        recruitmentService.deleteRecruitment(userPrincipal.getMember(), id);
+        recruitmentService.deleteRecruitment(user.getMember(), id);
 
         return ResponseEntity.ok("모집 공고가 성공적으로 삭제되었습니다.");
     }
