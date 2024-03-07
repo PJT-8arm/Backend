@@ -1,29 +1,29 @@
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: prod
   threads:
     virtual:
       enabled: true
   datasource:
-    url: jdbc:h2:./db_dev;MODE=MYSQL;
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://172.17.0.1:3306/armapp
+    username: ${database.username}
+    password: ${database.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
       show-sql: true
       default_batch_fetch_size: 100
       format_sql: true
       highlight_sql: true
       use_sql_comments: true
 
-
 custom:
   site:
     name: armapp
-    baseUrl: "http://localhost:${server.port}"
+    baseUrl: "http://api.arm.genj.me"
