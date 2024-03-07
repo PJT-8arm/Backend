@@ -44,5 +44,6 @@ public class Member extends TimeEntity {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Builder.Default
 	private List<String> roles = new ArrayList<>();
+
 }
 
