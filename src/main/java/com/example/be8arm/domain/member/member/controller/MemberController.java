@@ -40,6 +40,7 @@ public class MemberController {
 	public JwtToken logIn(@RequestBody LogInDto loginDto) {
 		String username = loginDto.getUsername();
 		String password = loginDto.getPassword();
+
 		JwtToken jwtToken = memberService.logIn(username, password);
 		log.info("request username = {}, password = {}", username, password);
 		log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
