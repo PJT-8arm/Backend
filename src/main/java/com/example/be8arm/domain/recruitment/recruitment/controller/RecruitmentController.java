@@ -50,11 +50,21 @@ public class RecruitmentController {
     @PutMapping("/update/{id}") // 수정
     public ResponseEntity<RecruitmentUpdateResponseDto> recruitmentUpdate(
         @PathVariable Long id,
-        @AuthenticationPrincipal Member user,
+        @AuthenticationPrincipal UserPrincipal user,
         @RequestBody RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
 
-        RecruitmentUpdateResponseDto recruitmentUpdateResponseDto = recruitmentService.updateRecruitment(id, user, recruitmentUpdateRequestDto);
+        RecruitmentUpdateResponseDto recruitmentUpdateResponseDto = recruitmentService.updateRecruitment(id, user.getMember(), recruitmentUpdateRequestDto);
 
         return ResponseEntity.ok(recruitmentUpdateResponseDto);
+    }
+
+    @DeleteMapping("/delete/{id}") // 삭제
+    public ResponseEntity<String> recruitmentDelete(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        recruitmentService.deleteRecruitment(userPrincipal.getMember(), id);
+
+        return ResponseEntity.ok("모집 공고가 성공적으로 삭제되었습니다.");
     }
 }

@@ -48,7 +48,7 @@ public class UserPrincipal implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return member.getName();
+		return member.getUsername();
 	}
 
 	@Override
