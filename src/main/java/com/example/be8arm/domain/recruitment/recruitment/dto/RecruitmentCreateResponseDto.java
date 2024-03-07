@@ -17,8 +17,6 @@ public class RecruitmentCreateResponseDto {
 
     private Long id;
 
-    private Member member;
-
     private String title;
 
     private String content;
@@ -37,7 +35,6 @@ public class RecruitmentCreateResponseDto {
 
     public RecruitmentCreateResponseDto(Recruitment recruitment) {
         this.id = recruitment.getId();
-        this.member = recruitment.getMember();
         this.title = recruitment.getTitle();
         this.content = recruitment.getContent();
         this.recruit_date = recruitment.getRecruit_date();

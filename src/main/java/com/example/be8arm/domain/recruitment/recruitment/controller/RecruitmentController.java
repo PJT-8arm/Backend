@@ -7,6 +7,7 @@ import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDeta
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.service.RecruitmentService;
+import com.example.be8arm.global.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,10 @@ public class RecruitmentController {
 
     @PostMapping("/write") // 작성
     public ResponseEntity<RecruitmentCreateResponseDto> recruitmentAdd(
-            @AuthenticationPrincipal Member user,
+            @AuthenticationPrincipal UserPrincipal user,
             @RequestBody RecruitmentCreateRequestDto recruitmentCreateRequestDto){
 
-        RecruitmentCreateResponseDto recruitmentCreateResponseDto = recruitmentService.addRecruitment(user, recruitmentCreateRequestDto);
+        RecruitmentCreateResponseDto recruitmentCreateResponseDto = recruitmentService.addRecruitment(user.getMember(), recruitmentCreateRequestDto);
 
         return ResponseEntity.ok(recruitmentCreateResponseDto);
     }

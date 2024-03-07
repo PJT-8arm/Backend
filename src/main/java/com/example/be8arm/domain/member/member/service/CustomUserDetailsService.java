@@ -1,5 +1,6 @@
 package com.example.be8arm.domain.member.member.service;
 
+import com.example.be8arm.global.security.UserPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,9 +22,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return memberRepository.findByUsername(username)
-			.map(this::createUserDetails)
-			.orElseThrow(() -> new UsernameNotFoundException("해당하는 회원을 찾을 수 없습니다."));
+		Member member = memberRepository.findByUsername(username)
+				.orElseThrow(() -> new UsernameNotFoundException("해당하는 회원을 찾을 수 없습니다."));
+		return UserPrincipal.create(member);
 	}
 
 	// 해당하는 User 의 데이터가 존재한다면 UserDetails 객체로 만들어서 return
