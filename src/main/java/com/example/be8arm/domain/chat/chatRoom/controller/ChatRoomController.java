@@ -78,19 +78,21 @@ public class ChatRoomController {
 
 	@GetMapping("/list")
 	public ResponseEntity<?> showList(
-		@AuthenticationPrincipal UserDetails user) {
+		@AuthenticationPrincipal UserPrincipal user) {
 		//TODO 무한스크롤 구현
-		List<ChatRoomListDto> chatRooms = chatRoomService.findByMemberId(user.getId());
+		List<ChatRoomListDto> chatRooms = chatRoomService.findByMemberId(user.getMember().getId());
 		return ResponseEntity.ok(chatRooms);
 	}
 
 	@PostMapping("/{roomId}/write")
 	public ResponseEntity<?> write(
+		//TODO roomId를 request에 넣을지 말지
 		@PathVariable final long roomId,
-		@AuthenticationPrincipal UserDetails user,
+		@AuthenticationPrincipal UserPrincipal user,
 		@RequestBody final WriteRequestBody requestBody
 	) {
-		chatMessageService.writeAndSend(roomId, user.getName(), requestBody.getContent(), "created", user.getId());
+		chatMessageService.writeAndSend(roomId, user.getMember().getName(),
+			requestBody.getContent(), "created", user.getMember().getId());
 
 		return ResponseEntity.ok("성공");
 	}
@@ -114,23 +116,25 @@ public class ChatRoomController {
 
 		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(myMember.getId(),
 			chatRoomId);
+		ChatRoomInfoDto chatRoomInfoDto = new ChatRoomInfoDto(chatRoomMember);
 
-		return ResponseEntity.ok(chatRoomMember);
+		return ResponseEntity.ok(chatRoomInfoDto);
 
 	}
 
 	@DeleteMapping("/exit/{chatRoomId}")
 	public ResponseEntity<?> exitChatRoom(
 		@PathVariable Long chatRoomId,
-		@AuthenticationPrincipal UserDetails user) {
+		@AuthenticationPrincipal UserPrincipal user) {
 
-		if (!chatRoomService.isIncludeMe(user.getId(), chatRoomId)) {
+		if (!chatRoomService.isIncludeMe(user.getMember().getId(), chatRoomId)) {
 			return ResponseEntity.badRequest().body("권한이 없습니다.");
 		}
 
-		chatMessageService.writeAndSend(chatRoomId, user.getName(), "퇴장", "deleted", user.getId());
+		chatMessageService.writeAndSend(chatRoomId, user.getMember().getName(), "퇴장", "deleted",
+			user.getMember().getId());
 
-		if (!chatRoomService.deleteChatRoomByMemberIdAndChatRoomId(user.getId(), chatRoomId)) {
+		if (!chatRoomService.deleteChatRoomByMemberIdAndChatRoomId(user.getMember().getId(), chatRoomId)) {
 			return ResponseEntity.unprocessableEntity().body("채팅방을 나가는데 실패했습니다.");
 		}
 
