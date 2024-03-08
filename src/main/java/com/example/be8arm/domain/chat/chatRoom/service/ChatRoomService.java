@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
-import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomMemberInfoDto;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMemberId;
 import com.example.be8arm.domain.chat.chatRoom.repository.ChatRoomMemberRepository;
 import com.example.be8arm.domain.chat.chatRoom.repository.ChatRoomRepository;
 import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomService {
 	private final ChatRoomRepository chatRoomRepository;
 	private final ChatRoomMemberRepository chatRoomMemberRepository;
+	private final MemberRepository memberRepository;
 
 	public List<ChatRoomListDto> findByMemberId(Long memberId) {
 		List<Object[]> results = chatRoomRepository.findChatRoomsAndLatestMessageByMemberId(memberId);
@@ -59,46 +60,42 @@ public class ChatRoomService {
 	}
 
 	@Transactional
-	public Long makeChatRoom(ChatRoomMemberInfoDto myInfoDto, ChatRoomMemberInfoDto theirInfoDto) {
+	public Long makeChatRoom(Member myMember, Member theirMember) {
 		ChatRoom chatRoom = ChatRoom.builder().build();
 
 		Long chatRoomId = chatRoomRepository.save(chatRoom).getId();
 		//복합키 생성
-		ChatRoomMemberId myRoomId = ChatRoomMemberId.builder()
-			.chatRoomId(chatRoomId)
-			.memberId(myInfoDto.getId())
-			.build();
-
-		ChatRoomMemberId theirRoomId = ChatRoomMemberId.builder()
-			.chatRoomId(chatRoomId)
-			.memberId(theirInfoDto.getId())
-			.build();
+		ChatRoomMemberId myChatRoomMemberId = createChatRoomMemberId(myMember.getId(), chatRoomId);
+		ChatRoomMemberId theirChatRoomMemberId = createChatRoomMemberId(theirMember.getId(), chatRoomId);
 
 		//중간 테이블 데이터 생성
-		String chatRoomName = theirInfoDto.getName() + ", " + myInfoDto.getName();
-
-		ChatRoomMember myChatRoomMember = ChatRoomMember.builder()
-			.id(myRoomId)
-			.member(memberRepository.findById(myInfoDto.getId())
-				.orElseThrow(() -> new RuntimeException("Member not found"))) // 멤버 엔티티 참조 설정
-			.chatRoom(chatRoom)
-			.chatRoomName(chatRoomName)
-			.imgUrl(theirInfoDto.getImgUrl())
-			.build();
-
-		ChatRoomMember theirChatRoomMember = ChatRoomMember.builder()
-			.id(theirRoomId)
-			.member(memberRepository.findById(theirInfoDto.getId())
-				.orElseThrow(() -> new RuntimeException("Member not found"))) // 멤버 엔티티 참조 설정
-			.chatRoom(chatRoom)
-			.chatRoomName(chatRoomName)
-			.imgUrl(myInfoDto.getimgUrl())
-			.build();
+		ChatRoomMember myChatRoomMember = createChatRoomMember(myChatRoomMemberId, myMember, theirMember, chatRoom);
+		ChatRoomMember theirChatRoomMember = createChatRoomMember(theirChatRoomMemberId, theirMember, myMember,
+			chatRoom);
 
 		chatRoomMemberRepository.save(myChatRoomMember);
 		chatRoomMemberRepository.save(theirChatRoomMember);
 
 		return chatRoomId;
+	}
+
+	private ChatRoomMemberId createChatRoomMemberId(long memberId, long chatRoomId) {
+		return ChatRoomMemberId.builder()
+			.chatRoomId(chatRoomId)
+			.memberId(memberId)
+			.build();
+	}
+
+	private ChatRoomMember createChatRoomMember(ChatRoomMemberId myChatRoomMemberId, Member myMember,
+		Member theirMember, ChatRoom chatRoom) {
+		return ChatRoomMember.builder()
+			.id(myChatRoomMemberId)
+			.member(memberRepository.findById(myMember.getId())
+				.orElseThrow(() -> new RuntimeException("Member not found"))) // 멤버 엔티티 참조 설정
+			.chatRoom(chatRoom)
+			.chatRoomName(theirMember.getName() + ", " + myMember.getName())
+			.imgUrl(theirMember.getImgUrl())
+			.build();
 	}
 
 	public Optional<ChatRoom> findById(long roomId) {
@@ -107,13 +104,6 @@ public class ChatRoomService {
 
 	public boolean isIncludeMe(long memberId, long roomId) {
 		return chatRoomMemberRepository.existsByChatRoomIdAndMemberId(roomId, memberId);
-	}
-
-	public ChatRoomMemberInfoDto createInfoDtoByEmail(String email) {
-		Member member = memberRepository.findByEmail(email)
-			.orElseThrow(() -> new NoSuchElementException("email이 존재하지 않습니다."));
-
-		return new ChatRoomMemberInfoDto(member.getId(), member.getName(), member.getImgUrl());
 	}
 
 	public ChatRoomMember findChatRoomMemberByChatRoomIdAndMemberId(long memberId, long roomId) {

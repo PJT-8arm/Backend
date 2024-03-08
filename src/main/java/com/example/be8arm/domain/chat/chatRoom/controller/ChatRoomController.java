@@ -19,10 +19,12 @@ import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.ModifyRequestBody;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.WriteRequestBody;
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
-import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomMemberInfoDto;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 import com.example.be8arm.domain.chat.chatRoom.service.ChatRoomService;
+import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.service.MemberService;
+import com.example.be8arm.global.security.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,17 +34,20 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomController {
 	private final ChatRoomService chatRoomService;
 	private final ChatMessageService chatMessageService;
+	private final MemberService memberService;
 
 	@GetMapping("/{roomId}")
 	public ResponseEntity<?> showRoom(
 		@PathVariable final long roomId,
-		@AuthenticationPrincipal UserDetails user
+		@AuthenticationPrincipal UserPrincipal user
 	) {
-		if (!chatRoomService.isIncludeMe(user.getId(), roomId)) {
+		if (!chatRoomService.isIncludeMe(user.getMember().getId(), roomId)) {
 			return ResponseEntity.badRequest().body("채팅방 입장 권한이 없습니다.");
 		}
 
-		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(user.getId(), roomId);
+		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(
+			user.getMember().getId(), roomId);
+
 		return ResponseEntity.ok(chatRoomMember);
 	}
 
@@ -80,22 +85,22 @@ public class ChatRoomController {
 
 	@GetMapping("/make/{theirInfo}")
 	public ResponseEntity<?> makeChatRoom(
-		@AuthenticationPrincipal UserDetails user,
-		@PathVariable String theirEmail //
+		@AuthenticationPrincipal UserPrincipal user,
+		@PathVariable String theirUsername //
 	) {
-		ChatRoomMemberInfoDto myInfoDto = new ChatRoomMemberInfoDto(user.getId(), user.getName(), user.getImgUrl());
-		ChatRoomMemberInfoDto theirInfoDto = chatRoomService.createInfoDtoByEmail(theirEmail);
+		Member myMember = user.getMember();
+		Member theirMember = memberService.findByUsername(theirUsername);
 
 		Long chatRoomId;
 		//이미 존재 하는 방일 때 0보다 큰값이 return됨
-		if ((chatRoomId = chatRoomService.findChatRoom(user.getId(), theirInfoDto.getId())) <= 0) {
-			chatRoomId = chatRoomService.makeChatRoom(myInfoDto, theirInfoDto);
-			chatMessageService.writeAndSend(chatRoomId, user.getName(), "생성", "created", user.getId());
+		if ((chatRoomId = chatRoomService.findChatRoom(myMember.getId(), theirMember.getId())) <= 0) {
+			chatRoomId = chatRoomService.makeChatRoom(user.getMember(), theirMember);
+			chatMessageService.writeAndSend(chatRoomId, myMember.getName(), "생성", "created", myMember.getId());
 		} else {
-			chatRoomId = chatRoomService.findChatRoom(user.getId(), theirInfoDto.getId());
+			chatRoomId = chatRoomService.findChatRoom(myMember.getId(), theirMember.getId());
 		}
 
-		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(user.getId(),
+		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(myMember.getId(),
 			chatRoomId);
 
 		return ResponseEntity.ok(chatRoomMember);
