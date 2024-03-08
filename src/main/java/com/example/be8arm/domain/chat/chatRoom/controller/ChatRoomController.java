@@ -32,7 +32,7 @@ import com.example.be8arm.global.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/chat/room")
+@RequestMapping("api/chat/room")
 @RequiredArgsConstructor
 public class ChatRoomController {
 	private final ChatRoomService chatRoomService;
