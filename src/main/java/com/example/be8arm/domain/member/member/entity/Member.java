@@ -45,7 +45,7 @@ public class Member extends TimeEntity {
 	@Builder.Default
 	private List<String> roles = new ArrayList<>();
 
-	// public Member(String username, String name, String imgUrl, String nickname, Profile profile) {
-	// }
+	public Member(String username, String name, String imgUrl, String nickname, Profile profile) {
+	}
 }
 

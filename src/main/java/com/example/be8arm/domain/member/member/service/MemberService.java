@@ -2,19 +2,23 @@ package com.example.be8arm.domain.member.member.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.member.member.dto.MemberDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
+import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.repository.MemberRepository;
 import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
+import com.example.be8arm.global.security.UserPrincipal;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -58,20 +62,20 @@ public class MemberService {
 		return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
 	}
 
-	// public UserPrincipal findByUsername(String username) throws UsernameNotFoundException {
-	// 	Optional<Member> _member = memberRepository.findByUsername(username);
-	//
-	// 	if (_member.isEmpty()) {
-	// 		throw new UsernameNotFoundException(username);
-	// 	}
-	// 	Member member = _member.get();
-	// 	return new UserPrincipal(
-	// 		member.getUsername(),
-	// 		member.getName(),
-	// 		member.getImgUrl(),
-	// 		member.getNickname(),
-	// 		member.getProfile());
-	// }
+	public UserPrincipal findByUsername(String username) throws UsernameNotFoundException {
+		Optional<Member> _member = memberRepository.findByUsername(username);
+
+		if (_member.isEmpty()) {
+			throw new UsernameNotFoundException(username);
+		}
+		Member member = _member.get();
+		return new UserPrincipal(
+			member.getUsername(),
+			member.getName(),
+			member.getImgUrl(),
+			member.getNickname(),
+			member.getProfile());
+	}
 	//
 	// public Member findByUsername(String username) throws UsernameNotFoundException {
 	// 	Optional<Member> member = memberRepository.findByUsername(username);

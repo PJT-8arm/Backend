@@ -24,7 +24,7 @@ public class UserPrincipal implements UserDetails {
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserPrincipal(String username, String name, String imgUrl, String nickname, Profile profile) {
-		// this.member = new Member(username, name, imgUrl, nickname, profile);
+		this.member = new Member(username, name, imgUrl, nickname, profile);
 		this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 	}
 
