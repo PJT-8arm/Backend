@@ -3,6 +3,8 @@ package com.example.be8arm.domain.chat.chatRoom.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
@@ -57,11 +60,16 @@ public class ChatRoomController {
 	@GetMapping("/{roomId}/messages")
 	public ResponseEntity<?> showMessages(
 		@PathVariable final long roomId,
-		@AuthenticationPrincipal UserDetails user) {
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "30") int size
+	) {
 		Optional<ChatRoom> chatRoomOptional = chatRoomService.findById(roomId);
 		//TODO 페이지네이션으로 무한스크롤 구현
 		if (chatRoomOptional.isPresent()) {
 			ChatRoom chatRoom = chatRoomOptional.get();
+			Pageable pageable = PageRequest.of(page, size);
+
+			chatMessageService.showChatMessagesWithPage(roomId, pageable);
 			return ResponseEntity.ok(chatRoom.getChatMessages());
 		} else {
 			return ResponseEntity.notFound().build();
@@ -71,6 +79,7 @@ public class ChatRoomController {
 	@GetMapping("/list")
 	public ResponseEntity<?> showList(
 		@AuthenticationPrincipal UserDetails user) {
+		//TODO 무한스크롤 구현
 		List<ChatRoomListDto> chatRooms = chatRoomService.findByMemberId(user.getId());
 		return ResponseEntity.ok(chatRooms);
 	}
