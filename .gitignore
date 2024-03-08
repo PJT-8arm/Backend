@@ -37,5 +37,6 @@ out/
 .vscode/
 
 application-secret.yml
+application-jwt.yml
 db_dev.mv.db
 db_dev.trace.db
