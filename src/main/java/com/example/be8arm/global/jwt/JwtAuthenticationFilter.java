@@ -2,10 +2,13 @@ package com.example.be8arm.global.jwt;
 
 import java.io.IOException;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+
+import com.example.be8arm.global.security.UserPrincipal;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,7 +30,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		// 2. validateToken으로 토큰 유효성 검사
 		if (token != null && jwtTokenProvider.validateToken(token)) {
 			// 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
-			Authentication authentication = jwtTokenProvider.getAuthentication(token);
+			UserPrincipal userPrincipal = (UserPrincipal)jwtTokenProvider.getAuthentication(token);
+			Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null,
+				userPrincipal.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 		chain.doFilter(request, response);

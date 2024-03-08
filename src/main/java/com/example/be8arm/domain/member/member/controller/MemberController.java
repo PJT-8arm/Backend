@@ -17,6 +17,7 @@ import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @ResponseBody
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
 
 	private final MemberService memberService;
@@ -37,10 +38,11 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public JwtToken logIn(@RequestBody LogInDto loginDto) {
+	public JwtToken logIn(@RequestBody LogInDto loginDto, HttpServletResponse response) {
 		String username = loginDto.getUsername();
 		String password = loginDto.getPassword();
-		JwtToken jwtToken = memberService.logIn(username, password);
+
+		JwtToken jwtToken = memberService.logIn(username, password, response);
 		log.info("request username = {}, password = {}", username, password);
 		log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
 		return jwtToken;
