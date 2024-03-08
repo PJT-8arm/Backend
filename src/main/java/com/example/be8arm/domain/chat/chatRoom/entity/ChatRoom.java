@@ -54,6 +54,6 @@ public class ChatRoom extends IdEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore // 무한 재귀 방지
-	private List<ChatMember> chatRoomMembers;
+	private List<ChatRoomMember> chatRoomMembers;
 
 }
