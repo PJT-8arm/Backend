@@ -18,6 +18,7 @@ import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.repository.MemberRepository;
 import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
+import com.example.be8arm.global.security.UserPrincipal;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
