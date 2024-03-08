@@ -1,7 +1,5 @@
 package com.example.be8arm.domain.chat.chatRoom.entity;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -49,7 +47,7 @@ public class ChatRoomMember {
 	private String imgUrl;
 
 	@CreatedDate
-	private LocalDateTime lastViewTime;
+	private Long lastViewMessageId;
 
 	public void setChatRoomName(String chatRoomName) {
 		this.chatRoomName = chatRoomName;

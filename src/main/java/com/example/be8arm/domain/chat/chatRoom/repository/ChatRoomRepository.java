@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
+import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
@@ -28,4 +29,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 		   """, nativeQuery = true)
 	List<Object[]> findChatRoomsAndLatestMessageByMemberId(@Param("memberId") Long memberId);
 
+	List<ChatRoomMember> findByMemberId(long memberId);
 }

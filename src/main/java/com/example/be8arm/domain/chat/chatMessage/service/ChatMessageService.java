@@ -79,4 +79,8 @@ public class ChatMessageService {
 	public Page<ChatMessage> showChatMessagesWithPage(long roomId, Pageable pageable) {
 		return chatMessageRepository.findByChatRoomIdOrderByIdDesc(roomId, pageable);
 	}
+
+	// public long countMessageUnReaded(long memberId) {
+	// 	List<ChatRoomMember> chatRoomMembers = chatRoomRepository.findByMemberId(memberId);
+	// }
 }
