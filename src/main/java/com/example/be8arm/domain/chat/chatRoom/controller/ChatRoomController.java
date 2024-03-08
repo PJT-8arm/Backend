@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.ModifyRequestBody;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.WriteRequestBody;
+import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomInfoDto;
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
@@ -45,10 +46,12 @@ public class ChatRoomController {
 			return ResponseEntity.badRequest().body("채팅방 입장 권한이 없습니다.");
 		}
 
-		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(
-			user.getMember().getId(), roomId);
+		ChatRoomMember chatRoomMember = chatRoomService
+			.findChatRoomMemberByChatRoomIdAndMemberId(user.getMember().getId(), roomId);
 
-		return ResponseEntity.ok(chatRoomMember);
+		ChatRoomInfoDto chatRoomInfoDto = new ChatRoomInfoDto(chatRoomMember);
+
+		return ResponseEntity.ok(chatRoomInfoDto);
 	}
 
 	@GetMapping("/{roomId}/messages")

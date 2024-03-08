@@ -1,8 +1,5 @@
 package com.example.be8arm.domain.chat.chatRoom.dto;
 
-import java.util.List;
-import java.util.Map;
-
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 
 import lombok.AllArgsConstructor;
@@ -18,10 +15,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ShowChatRoomInfoDto {
+public class ChatRoomInfoDto {
 	private Long chatRoomId;
 	private String chatRoomName; //방 이름
-	private Map<String,String> imgUrl; //<이름, 프로필사진>
+	private String imgUrl; //<이름, 프로필사진>
 
 	//생성자
+	public ChatRoomInfoDto(ChatRoomMember chatRoomMember) {
+		this.chatRoomId = chatRoomMember.getId().getChatRoomId();
+		this.chatRoomName = chatRoomMember.getChatRoomName();
+		this.imgUrl = chatRoomMember.getImgUrl();
+	}
 }
