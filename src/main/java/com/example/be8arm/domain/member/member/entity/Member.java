@@ -46,6 +46,11 @@ public class Member extends TimeEntity {
 	private List<String> roles = new ArrayList<>();
 
 	public Member(String username, String name, String imgUrl, String nickname, Profile profile) {
+		this.username = username;
+		this.name = name;
+		this.imgUrl = imgUrl;
+		this.nickname = nickname;
+		this.profile = profile;
 	}
 }
 
