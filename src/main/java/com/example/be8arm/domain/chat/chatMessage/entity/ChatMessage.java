@@ -36,7 +36,7 @@ public class ChatMessage extends IdEntity {
 	@ManyToOne
 	private ChatRoom chatRoom;
 
-	private String senderName;
+	private String writerName;
 
 	private String content;
 
