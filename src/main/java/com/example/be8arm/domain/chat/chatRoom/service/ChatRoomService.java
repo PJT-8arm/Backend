@@ -1,6 +1,5 @@
 package com.example.be8arm.domain.chat.chatRoom.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,15 +33,7 @@ public class ChatRoomService {
 		List<ChatRoomListDto> chatRooms = new ArrayList<>();
 
 		for (Object[] result : results) {
-			chatRooms.add(new ChatRoomListDto(
-				(Long)result[0], // chatRoomId
-				(String)result[1], // name
-				(Long)result[2], // latestMessageId
-				(String)result[3], // lastMessage
-				(LocalDateTime)result[4],//lastDate
-				(String)result[5], //lastWriter
-				(String)result[6] //imgUrl
-			));
+			chatRooms.add(new ChatRoomListDto(result));
 		}
 		return chatRooms;
 	}

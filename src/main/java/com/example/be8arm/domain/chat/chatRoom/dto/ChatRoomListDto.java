@@ -17,4 +17,14 @@ public class ChatRoomListDto {
 	private LocalDateTime lastDateTime;
 	private String lastWriter;
 	private String imgUrl;
+
+	public ChatRoomListDto(Object[] result) {
+		this.chatRoomId = (Long)result[0];
+		this.name = (String)result[1];
+		this.latestMessageId = (Long)result[2];
+		this.lastMessage = (String)result[3];
+		this.lastDateTime = (LocalDateTime)result[4];
+		this.lastWriter = (String)result[5];
+		this.imgUrl = (String)result[6];
+	}
 }

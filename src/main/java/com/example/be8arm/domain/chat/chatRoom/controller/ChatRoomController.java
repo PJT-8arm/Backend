@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -144,14 +143,14 @@ public class ChatRoomController {
 	@PatchMapping("/modify/{chatRoomId}")
 	public ResponseEntity<?> modifyChatRoomName(
 		@PathVariable Long chatRoomId,
-		@AuthenticationPrincipal UserDetails user,
+		@AuthenticationPrincipal UserPrincipal user,
 		@RequestBody final ModifyRequestBody modifyBody) {
 
-		if (!chatRoomService.isIncludeMe(user.getId(), chatRoomId)) {
+		if (!chatRoomService.isIncludeMe(user.getMember().getId(), chatRoomId)) {
 			return ResponseEntity.badRequest().body("권한이 없습니다.");
 		}
 
-		chatRoomService.modifyChatRoomName(user.getId(), chatRoomId, modifyBody.getChatRoomName());
+		chatRoomService.modifyChatRoomName(user.getMember().getId(), chatRoomId, modifyBody.getChatRoomName());
 
 		return ResponseEntity.ok("성공");
 	}
