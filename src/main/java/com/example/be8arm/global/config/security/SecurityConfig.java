@@ -53,6 +53,16 @@ public class SecurityConfig {
 						.requestMatchers("/members/test").hasRole("USER") // USER 권한이 있어야 요청할 수 있음
 						.anyRequest().authenticated()
 			)
+			// .formLogin(
+			// 	formLogin -> formLogin
+			// 		.loginPage("/members/login")
+			// 		.defaultSuccessUrl("/")
+			// )
+			// .logout(
+			// 	logout -> logout
+			// 		.logoutUrl("/members/logout")
+			// 		.logoutSuccessUrl("/")
+			// )
 			// JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 

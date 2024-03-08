@@ -27,7 +27,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -44,7 +46,7 @@ public class JwtTokenProvider {
 	}
 
 	// Member 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
-	public JwtToken generateToken(Authentication authentication) {
+	public JwtToken generateToken(Authentication authentication, HttpServletResponse response) {
 
 		// 권한 가져오기
 		String authorities = authentication.getAuthorities().stream()
@@ -74,11 +76,24 @@ public class JwtTokenProvider {
 			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
 
+		// 쿠키에 토큰 추가
+		addTokenToCookie(response, accessToken);
+
 		return JwtToken.builder()
 			.grantType("Bearer")
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)
 			.build();
+	}
+
+	// JwtTokenProvider 클래스에 쿠키를 추가하는 메서드 추가
+	private void addTokenToCookie(HttpServletResponse response, String token) {
+		Cookie cookie = new Cookie("JwtToken", token);
+		cookie.setHttpOnly(true);
+		cookie.setSecure(true);
+		cookie.setPath("/");
+		cookie.setMaxAge(60 * 60 * 24); // 1일
+		response.addCookie(cookie);
 	}
 
 	// Jwt 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
