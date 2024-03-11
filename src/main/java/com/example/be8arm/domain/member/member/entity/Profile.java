@@ -5,6 +5,7 @@ import com.example.be8arm.global.TimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,7 +21,8 @@ public class Profile extends TimeEntity {
 
 	private Integer age;
 
-	private Gender gender;
+	@Builder.Default
+	private Gender gender = Gender.Male;
 
 	private Integer benchPress;
 
@@ -29,4 +31,8 @@ public class Profile extends TimeEntity {
 	private Integer squat;
 
 	private Integer totalWeight;
+
+	public Profile(Member member) {
+		this.member = member;
+	}
 }

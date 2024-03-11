@@ -3,6 +3,8 @@ package com.example.be8arm.domain.member.member.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.be8arm.global.TimeEntity;
 
 import jakarta.persistence.Column;
@@ -51,6 +53,15 @@ public class Member extends TimeEntity {
 		this.imgUrl = imgUrl;
 		this.nickname = nickname;
 		this.profile = profile;
+	}
+
+	public boolean notHasProfile() {
+		return this.profile == null;
+	}
+
+	@Transactional
+	public void createProfile() {
+		this.profile = new Profile(this);
 	}
 }
 
