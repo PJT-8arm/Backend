@@ -25,8 +25,7 @@ public class MypageController {
 	private MemberService memberservice;
 
 	//todo 보류. GET 회원정보 수정 전 비밀번호 재확인 페이지 - 데이터=username
-	//todo 보류. POST 회원정보 수정 전 비밀번호 재확인 페이지 -
-	//Todo GET 회원정보 수정 페이지 - 데이터 member정보
+	//todo 보류. POST 회원정보 수정 전 비밀번호 재확인 페이지
 	@GetMapping("/modify")
 	public ResponseEntity<?> mypageDetails(@AuthenticationPrincipal UserPrincipal member) {
 
@@ -36,7 +35,6 @@ public class MypageController {
 		return responseEntity;
 	}
 
-	//todo POST 회원정보 수정 페이지 - 데이터 member정보
 	@PostMapping("/modify")
 	public ResponseEntity<SignUpDto> mypageDetails(@AuthenticationPrincipal UserPrincipal member,
 		@RequestBody SignUpDto signUpDto) {
@@ -49,4 +47,9 @@ public class MypageController {
 		}
 		return responseEntity;
 	}
+
+	// todo GET 프로필 페이지 프로필 데이터 - 24.03.11
+	// todo POST 프로필 수정 프로필 데이터 - 24.03.11
+	// todo GET 내가 작성한 글 조회 모집글 데이터 - 24.03.11
+	// todo GET 내 약속 조회 모집글 데이터 - 24.03.11
 }
