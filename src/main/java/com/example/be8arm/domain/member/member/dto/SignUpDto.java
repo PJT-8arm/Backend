@@ -48,4 +48,11 @@ public class SignUpDto {
 			.roles(roles)
 			.build();
 	}
+
+	public SignUpDto(Member member) {
+		this.username = member.getUsername();
+		this.nickname = member.getNickname();
+		this.name = member.getName();
+		this.imgUrl = member.getImgUrl();
+	}
 }

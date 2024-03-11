@@ -3,10 +3,13 @@ package com.example.be8arm.domain.member.mypage.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.member.member.dto.MemberDto;
+import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.global.security.UserPrincipal;
 
@@ -27,10 +30,17 @@ public class MypageController {
 	@GetMapping("/modify")
 	public ResponseEntity<?> mypageDetails(@AuthenticationPrincipal UserPrincipal member) {
 
+		// todo 예외 적용 필요 - 24.3.11
 		MemberDto dto = MemberDto.toDto(memberservice.findByUsername(member.getUsername()));
 		ResponseEntity<MemberDto> responseEntity = ResponseEntity.ok(dto);
 		return responseEntity;
 	}
-	//todo POST 회원정보 수정 페이지 - 데이터 member정보
 
+	//todo POST 회원정보 수정 페이지 - 데이터 member정보
+	@PostMapping("/modify")
+	public ResponseEntity<?> mypageDetails(@AuthenticationPrincipal UserPrincipal member,
+		@RequestBody SignUpDto signUpDto) {
+		ResponseEntity<?> responseEntity;
+		SignUpDto dto = memberservice.modifyDetails(member.getUsername(), signUpDto);
+	}
 }
