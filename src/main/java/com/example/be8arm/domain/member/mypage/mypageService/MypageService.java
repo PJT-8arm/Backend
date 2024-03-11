@@ -1,6 +1,7 @@
 package com.example.be8arm.domain.member.mypage.mypageService;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.service.MemberService;
@@ -9,6 +10,7 @@ import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MypageService {
 	private final MemberService memberService;
