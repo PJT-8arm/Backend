@@ -38,9 +38,15 @@ public class MypageController {
 
 	//todo POST 회원정보 수정 페이지 - 데이터 member정보
 	@PostMapping("/modify")
-	public ResponseEntity<?> mypageDetails(@AuthenticationPrincipal UserPrincipal member,
+	public ResponseEntity<SignUpDto> mypageDetails(@AuthenticationPrincipal UserPrincipal member,
 		@RequestBody SignUpDto signUpDto) {
-		ResponseEntity<?> responseEntity;
-		SignUpDto dto = memberservice.modifyDetails(member.getUsername(), signUpDto);
+		ResponseEntity<SignUpDto> responseEntity;
+		try {
+			SignUpDto dto = memberservice.modifyDetails(member.getUsername(), signUpDto);
+			responseEntity = ResponseEntity.ok(dto);
+		} catch (Exception e) {
+			responseEntity = ResponseEntity.badRequest().build();
+		}
+		return responseEntity;
 	}
 }
