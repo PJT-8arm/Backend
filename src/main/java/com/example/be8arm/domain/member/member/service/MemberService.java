@@ -62,6 +62,7 @@ public class MemberService {
 		return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
 	}
 
+
 	public UserPrincipal findByUsername(String username) throws UsernameNotFoundException {
 		Optional<Member> _member = memberRepository.findByUsername(username);
 
@@ -76,14 +77,5 @@ public class MemberService {
 			member.getNickname(),
 			member.getProfile());
 	}
-	//
-	// public Member findByUsername(String username) throws UsernameNotFoundException {
-	// 	Optional<Member> member = memberRepository.findByUsername(username);
-	// 	if (!member.isPresent()) {
-	// 		throw new UsernameNotFoundException(username);
-	// 	}
-	// 	return member.get();
-	// }
-
 }
 

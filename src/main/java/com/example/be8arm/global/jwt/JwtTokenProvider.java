@@ -38,6 +38,7 @@ public class JwtTokenProvider {
 	private final Key key;
 	private final MemberRepository memberRepository;  // MemberRepository 주입
 
+
 	// AccessToken 만료 시간
 	private static final long ACCESS_TOKEN_EXPIRATION = 86400000; // 1 day
 
@@ -46,6 +47,7 @@ public class JwtTokenProvider {
 
 	// AccessToken 재발급 시간
 	private static final long ACCESS_TOKEN_RENEWAL_THRESHOLD = 60000; // 1 minute
+
 
 	// application.yml에서 secret 값 가져와서 key에 저장
 	public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, MemberRepository memberRepository) {
@@ -130,6 +132,7 @@ public class JwtTokenProvider {
 		Member member = memberRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다: " + username));
 
+
 		// AccessToken이 재발급되어야 하는지 확인
 		Date expiration = claims.getExpiration();
 		long now = System.currentTimeMillis();
@@ -141,6 +144,8 @@ public class JwtTokenProvider {
 			addTokenToCookie(response, renewedToken.getAccessToken());
 			return getAuthentication(renewedToken.getAccessToken(), response);
 		}
+
+
 
 		// UserDetails 객체를 만들어서 Authentication return
 		UserDetails principal = new UserPrincipal(member, authorities);
