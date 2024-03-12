@@ -1,13 +1,7 @@
 package com.example.be8arm.domain.member.member.entity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.be8arm.global.TimeEntity;
 
@@ -30,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @EqualsAndHashCode(of = "id")
-public class Member extends TimeEntity implements UserDetails {
+public class Member extends TimeEntity {
 
 	@Column(nullable = false)
 	private String username;  // 로그인 ID
@@ -51,31 +45,12 @@ public class Member extends TimeEntity implements UserDetails {
 	@Builder.Default
 	private List<String> roles = new ArrayList<>();
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles.stream()
-			.map(SimpleGrantedAuthority::new)
-			.collect(Collectors.toList());
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
+	public Member(String username, String name, String imgUrl, String nickname, Profile profile) {
+		this.username = username;
+		this.name = name;
+		this.imgUrl = imgUrl;
+		this.nickname = nickname;
+		this.profile = profile;
 	}
 }
 

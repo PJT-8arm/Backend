@@ -1,7 +1,5 @@
 package com.example.be8arm.domain.chat.chatRoom.entity;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -29,9 +27,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-public class ChatMember {
+public class ChatRoomMember {
 	@EmbeddedId
-	private ChatMemberId id;
+	private ChatRoomMemberId id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("chatRoomId") // ChatMemberId 내 chatRoomId 매핑
@@ -46,10 +44,10 @@ public class ChatMember {
 
 	private String chatRoomName; //사용자마다 채팅방 이름을 다르게 설정할 수 있도록
 
-	private String imageUrl;
+	private String imgUrl;
 
 	@CreatedDate
-	private LocalDateTime lastViewTime;
+	private Long lastViewMessageId;
 
 	public void setChatRoomName(String chatRoomName) {
 		this.chatRoomName = chatRoomName;
