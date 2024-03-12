@@ -61,21 +61,6 @@ public class MemberService {
 		return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
 	}
 
-	// public UserPrincipal findByUsername(String username) throws UsernameNotFoundException {
-	// 	Optional<Member> _member = memberRepository.findByUsername(username);
-	//
-	// 	if (_member.isEmpty()) {
-	// 		throw new UsernameNotFoundException(username);
-	// 	}
-	// 	Member member = _member.get();
-	// 	return new UserPrincipal(
-	// 		member.getUsername(),
-	// 		member.getName(),
-	// 		member.getImgUrl(),
-	// 		member.getNickname(),
-	// 		member.getProfile());
-	// }
-	//
 	public Member findByUsername(String username) throws UsernameNotFoundException {
 		Optional<Member> member = memberRepository.findByUsername(username);
 		if (!member.isPresent()) {
@@ -83,6 +68,4 @@ public class MemberService {
 		}
 		return member.get();
 	}
-
 }
-

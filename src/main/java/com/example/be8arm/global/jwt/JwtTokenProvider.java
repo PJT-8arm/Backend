@@ -38,6 +38,17 @@ public class JwtTokenProvider {
 	private final Key key;
 	private final MemberRepository memberRepository;  // MemberRepository 주입
 
+
+	// AccessToken 만료 시간
+	private static final long ACCESS_TOKEN_EXPIRATION = 86400000; // 1 day
+
+	// RefreshToken 만료 시간
+	private static final long REFRESH_TOKEN_EXPIRATION = 172800000; // 2 days
+
+	// AccessToken 재발급 시간
+	private static final long ACCESS_TOKEN_RENEWAL_THRESHOLD = 60000; // 1 minute
+
+
 	// application.yml에서 secret 값 가져와서 key에 저장
 	public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, MemberRepository memberRepository) {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -58,7 +69,7 @@ public class JwtTokenProvider {
 		Member member = userPrincipal.getMember();
 
 		// Access Token 생성
-		Date accessTokenExpiresIn = new Date(now + 86400000);
+		Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRATION);
 		String accessToken = Jwts.builder()
 			.setSubject(authentication.getName())
 			.claim("auth", authorities)
@@ -71,8 +82,9 @@ public class JwtTokenProvider {
 			.compact();
 
 		// Refresh Token 생성
+		Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRATION);
 		String refreshToken = Jwts.builder()
-			.setExpiration(new Date(now + 86400000))
+			.setExpiration(refreshTokenExpiresIn)
 			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
 
@@ -97,12 +109,17 @@ public class JwtTokenProvider {
 	}
 
 	// Jwt 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
-	public Authentication getAuthentication(String accessToken) {
+	public Authentication getAuthentication(String accessToken, HttpServletResponse response) {
 		// Jwt 토큰 복호화
 		Claims claims = parseClaims(accessToken);
 
 		if (claims.get("auth") == null) {
 			throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+		}
+
+		// Claims 객체가 null이면 예외 처리
+		if (claims == null) {
+			throw new RuntimeException("토큰이 유효하지 않습니다.");
 		}
 
 		// 클레임에서 권한 정보 가져오기
@@ -115,9 +132,52 @@ public class JwtTokenProvider {
 		Member member = memberRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다: " + username));
 
+
+		// AccessToken이 재발급되어야 하는지 확인
+		Date expiration = claims.getExpiration();
+		long now = System.currentTimeMillis();
+		long timeUntilExpiration = expiration.getTime() - now;
+
+		if (timeUntilExpiration < ACCESS_TOKEN_RENEWAL_THRESHOLD) {
+			// AccessToken이 재발급되어야 한다면 새로운 AccessToken을 생성
+			JwtToken renewedToken = generateRenewedToken(claims, response);
+			addTokenToCookie(response, renewedToken.getAccessToken());
+			return getAuthentication(renewedToken.getAccessToken(), response);
+		}
+
+
+
 		// UserDetails 객체를 만들어서 Authentication return
 		UserDetails principal = new UserPrincipal(member, authorities);
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+	}
+
+	private JwtToken generateRenewedToken(Claims claims, HttpServletResponse response) {
+		String username = claims.getSubject();
+		Member member = memberRepository.findByUsername(username)
+			.orElseThrow(() -> new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다: " + username));
+
+		String authorities = claims.get("auth", String.class);
+
+		Date accessTokenExpiresIn = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION);
+		String accessToken = Jwts.builder()
+			.setSubject(username)
+			.claim("auth", authorities)
+			.claim("username", member.getUsername())
+			.claim("nickname", member.getNickname())
+			.claim("name", member.getName())
+			.claim("imgUrl", member.getImgUrl())
+			.setExpiration(accessTokenExpiresIn)
+			.signWith(key, SignatureAlgorithm.HS256)
+			.compact();
+
+		addTokenToCookie(response, accessToken);
+
+		return JwtToken.builder()
+			.grantType("Bearer")
+			.accessToken(accessToken)
+			.refreshToken(null) // AccessToken 재발급 시 RefreshToken은 변경하지 않음
+			.build();
 	}
 
 	// 토큰 정보를 검증하는 메서드
@@ -153,12 +213,20 @@ public class JwtTokenProvider {
 		}
 	}
 
-	public String resolveToken(HttpServletRequest request) {
-		// Authorization 헤더에서 토큰 추출
-		String bearerToken = request.getHeader("Authorization");
-		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7); // "Bearer " 다음의 토큰 부분만 반환
+	String resolveToken(HttpServletRequest request) {
+		// 1. Request Header에서 토큰 추출
+		// String bearerToken = request.getHeader("Authorization");
+
+		// 2. Cookie에서 토큰 추출
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("JwtToken".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
 		}
+
 		return null;
 	}
 
