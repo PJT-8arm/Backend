@@ -215,24 +215,18 @@ public class JwtTokenProvider {
 
 	String resolveToken(HttpServletRequest request) {
 		// 1. Request Header에서 토큰 추출
-		String bearerToken = request.getHeader("Authorization");
+		// String bearerToken = request.getHeader("Authorization");
 
 		// 2. Cookie에서 토큰 추출
-		if (bearerToken == null) {
-			Cookie[] cookies = request.getCookies();
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if ("JwtToken".equals(cookie.getName())) {
-						bearerToken = cookie.getValue();
-						break;
-					}
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("JwtToken".equals(cookie.getName())) {
+					return cookie.getValue();
 				}
 			}
 		}
 
-		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7);
-		}
 		return null;
 	}
 
