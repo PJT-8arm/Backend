@@ -23,14 +23,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 		ServletException {
-		// 1. Request Header에서 JWT 토큰 추출
-		String token = jwtTokenProvider.resolveToken((HttpServletRequest)request);
+		// 1. 쿠키에서 엑세스, 리프레쉬 토큰 추출
+		String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest)request);
+		String refreshToken = jwtTokenProvider.resolveRefreshToken((HttpServletRequest)request);
 
 		// 2. validateToken으로 토큰 유효성 검사
-		if (token != null && jwtTokenProvider.validateToken(token)) {
+		if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
 			// 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
 			HttpServletResponse httpResponse = (HttpServletResponse)response;
-			Authentication authentication = jwtTokenProvider.getAuthentication(token, httpResponse);
+			Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, refreshToken, httpResponse);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		}

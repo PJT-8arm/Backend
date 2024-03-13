@@ -27,6 +27,4 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 		                                 ORDER BY latest_cm.max_id DESC
 		   """, nativeQuery = true)
 	List<Object[]> findChatRoomsAndLatestMessageByMemberId(@Param("memberId") Long memberId);
-
-	// List<ChatRoomMember> findByMemberId(long memberId);
 }

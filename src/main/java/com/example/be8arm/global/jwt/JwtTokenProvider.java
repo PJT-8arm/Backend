@@ -87,7 +87,7 @@ public class JwtTokenProvider {
 			.compact();
 
 		// 쿠키에 토큰 추가
-		addTokenToCookie(response, accessToken);
+		addTokenToCookie(accessToken, refreshToken, response);
 
 		return JwtToken.builder()
 			.grantType("Bearer")
@@ -96,18 +96,8 @@ public class JwtTokenProvider {
 			.build();
 	}
 
-	// JwtTokenProvider 클래스에 쿠키를 추가하는 메서드 추가
-	private void addTokenToCookie(HttpServletResponse response, String token) {
-		Cookie cookie = new Cookie("JwtToken", token);
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
-		cookie.setPath("/");
-		cookie.setMaxAge(60 * 60 * 24); // 1일
-		response.addCookie(cookie);
-	}
-
 	// Jwt 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
-	public Authentication getAuthentication(String accessToken, HttpServletResponse response) {
+	public Authentication getAuthentication(String accessToken, String refreshToken, HttpServletResponse response) {
 		// Jwt 토큰 복호화
 		Claims claims = parseClaims(accessToken);
 
@@ -138,8 +128,8 @@ public class JwtTokenProvider {
 		if (timeUntilExpiration < ACCESS_TOKEN_RENEWAL_THRESHOLD) {
 			// AccessToken이 재발급되어야 한다면 새로운 AccessToken을 생성
 			JwtToken renewedToken = generateRenewedToken(claims, response);
-			addTokenToCookie(response, renewedToken.getAccessToken());
-			return getAuthentication(renewedToken.getAccessToken(), response);
+			addTokenToCookie(renewedToken.getAccessToken(), renewedToken.getRefreshToken(), response);
+			return getAuthentication(renewedToken.getAccessToken(), renewedToken.getRefreshToken(), response);
 		}
 
 		// UserDetails 객체를 만들어서 Authentication return
@@ -166,13 +156,37 @@ public class JwtTokenProvider {
 			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
 
-		addTokenToCookie(response, accessToken);
+		Date refreshTokenExpiresIn = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION);
+		String refreshToken = Jwts.builder()
+			.setExpiration(refreshTokenExpiresIn)
+			.signWith(key, SignatureAlgorithm.HS256)
+			.compact();
+
+		addTokenToCookie(accessToken, refreshToken, response);
 
 		return JwtToken.builder()
 			.grantType("Bearer")
 			.accessToken(accessToken)
 			.refreshToken(null) // AccessToken 재발급 시 RefreshToken은 변경하지 않음
 			.build();
+	}
+
+	private void addTokenToCookie(String accessToken, String refreshToken, HttpServletResponse response) {
+		// 엑세스 토큰 쿠키 추가
+		Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
+		accessTokenCookie.setHttpOnly(true);
+		accessTokenCookie.setSecure(true);
+		accessTokenCookie.setPath("/");
+		accessTokenCookie.setMaxAge(60 * 60 * 24); // 1일
+		response.addCookie(accessTokenCookie);
+
+		// 리프레시 토큰 쿠키 추가
+		Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
+		refreshTokenCookie.setHttpOnly(true);
+		refreshTokenCookie.setSecure(true);
+		refreshTokenCookie.setPath("/");
+		refreshTokenCookie.setMaxAge(60 * 60 * 24 * 2); // 2일
+		response.addCookie(refreshTokenCookie);
 	}
 
 	// 토큰 정보를 검증하는 메서드
@@ -195,42 +209,43 @@ public class JwtTokenProvider {
 		return false;
 	}
 
-	// accessToken
+	// accessToken에서 클레임 가져오기
 	private Claims parseClaims(String accessToken) {
 		try {
 			return Jwts.parserBuilder()
 				.setSigningKey(key)
 				.build()
 				.parseClaimsJws(accessToken)
-				.getBody();
+				.getBody(); // 클레임 내용
 		} catch (ExpiredJwtException e) {
 			return e.getClaims();
 		}
 	}
 
-	String resolveToken(HttpServletRequest request) {
-		// 1. Request Header에서 토큰 추출
-		// String bearerToken = request.getHeader("Authorization");
-
-		// 2. Cookie에서 토큰 추출
+	public String resolveAccessToken(HttpServletRequest request) {
+		// 쿠키에서 엑세스 토큰 추출
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if ("JwtToken".equals(cookie.getName())) {
+				if ("AccessToken".equals(cookie.getName())) {
 					return cookie.getValue();
 				}
 			}
 		}
-
 		return null;
 	}
 
-	public void invalidateToken(HttpServletRequest request) {
-		// 클라이언트에게 전달된 토큰을 무효화
-		String token = resolveToken(request);
-		// 토큰을 무효화하는 추가적인 작업 수행 (예: 블랙리스트에 추가)
-
-		// 블랙리스트에 추가한 토큰은 검증에서 실패하도록 설정
-		// (JwtAuthenticationFilter의 doFilter 메서드에서 검증 시 블랙리스트 체크 추가 필요)
+	public String resolveRefreshToken(HttpServletRequest request) {
+		// 쿠키에서 리프레시 토큰 추출
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("RefreshToken".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
 	}
+	
 }

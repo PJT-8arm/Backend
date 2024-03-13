@@ -80,4 +80,3 @@ public class Member extends TimeEntity {
 	}
 
 }
-

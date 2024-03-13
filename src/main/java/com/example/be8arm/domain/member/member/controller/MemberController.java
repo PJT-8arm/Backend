@@ -16,7 +16,7 @@ import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,8 +64,24 @@ public class MemberController {
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<String> logOut(HttpServletRequest request) {
-		jwtTokenProvider.invalidateToken(request);
+	public ResponseEntity<String> logOut(HttpServletResponse response) {
+		// 쿠키에서 엑세스 토큰 삭제
+		Cookie accessTokenCookie = new Cookie("AccessToken", null);
+		accessTokenCookie.setHttpOnly(true);
+		accessTokenCookie.setSecure(true);
+		accessTokenCookie.setPath("/");
+		accessTokenCookie.setMaxAge(0); // 쿠키 만료
+		response.addCookie(accessTokenCookie);
+
+		// 쿠키에서 리프레시 토큰 삭제
+		Cookie refreshTokenCookie = new Cookie("RefreshToken", null);
+		refreshTokenCookie.setHttpOnly(true);
+		refreshTokenCookie.setSecure(true);
+		refreshTokenCookie.setPath("/");
+		refreshTokenCookie.setMaxAge(0); // 쿠키 만료
+		response.addCookie(refreshTokenCookie);
+
 		return ResponseEntity.ok("로그아웃 성공");
 	}
+
 }
