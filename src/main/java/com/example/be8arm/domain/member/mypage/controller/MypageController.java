@@ -64,7 +64,20 @@ public class MypageController {
 		}
 		return responseEntity;
 	}
+
 	// todo POST 프로필 수정 프로필 데이터 - 24.03.11
+	@PostMapping("/profile")
+	public ResponseEntity<ProfileDto> mypageModifyProfile(@AuthenticationPrincipal UserPrincipal member,
+		@RequestBody ProfileDto profileDto) {
+		ResponseEntity<ProfileDto> responseEntity;
+		try {
+			ProfileDto dto = mypageService.modifyProfile(member.getUsername(), profileDto);
+			responseEntity = ResponseEntity.ok(dto);
+		} catch (Exception e) {
+			responseEntity = ResponseEntity.badRequest().build();
+		}
+		return responseEntity;
+	}
 	// todo GET 내가 작성한 글 조회 모집글 데이터 - 24.03.11
 	// todo GET 내 약속 조회 모집글 데이터 - 24.03.11
 }

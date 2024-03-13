@@ -1,5 +1,6 @@
 package com.example.be8arm.domain.member.member.entity;
 
+import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import com.example.be8arm.global.TimeEntity;
 
 import jakarta.persistence.Entity;
@@ -34,5 +35,9 @@ public class Profile extends TimeEntity {
 
 	public Profile(Member member) {
 		this.member = member;
+	}
+
+	public void modify(ProfileDto profileDto) {
+		this.age = profileDto.getAge();
 	}
 }

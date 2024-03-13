@@ -62,21 +62,6 @@ public class MemberService {
 		return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
 	}
 
-	// public UserPrincipal findByUsername(String username) throws UsernameNotFoundException {
-	// 	Optional<Member> _member = memberRepository.findByUsername(username);
-	//
-	// 	if (_member.isEmpty()) {
-	// 		throw new UsernameNotFoundException(username);
-	// 	}
-	// 	Member member = _member.get();
-	// 	return new UserPrincipal(
-	// 		member.getUsername(),
-	// 		member.getName(),
-	// 		member.getImgUrl(),
-	// 		member.getNickname(),
-	// 		member.getProfile());
-	// }
-	//
 	public Member findByUsername(String username) throws UsernameNotFoundException {
 		Optional<Member> member = memberRepository.findByUsername(username);
 		if (!member.isPresent()) {
@@ -99,12 +84,10 @@ public class MemberService {
 			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
 		}
 
-		member.builder()
-			.password(encodingPassword(signUpDto.getPassword()))
-			.nickname(signUpDto.getNickname())
-			.name(signUpDto.getName())
-			.imgUrl(signUpDto.getImgUrl())
-			.build();
+		// 비밀번호 인코딩
+		signUpDto.setPassword(encodingPassword(signUpDto.getPassword()));
+
+		member.modify(signUpDto);
 
 		return new SignUpDto(member);
 	}
@@ -117,4 +100,3 @@ public class MemberService {
 		return passwordEncoder.encode(password);
 	}
 }
-
