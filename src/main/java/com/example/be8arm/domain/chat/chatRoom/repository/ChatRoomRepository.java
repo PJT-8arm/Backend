@@ -28,5 +28,4 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 		   """, nativeQuery = true)
 	List<Object[]> findChatRoomsAndLatestMessageByMemberId(@Param("memberId") Long memberId);
 
-	//List<ChatRoomMember> findByMemberId(long memberId);
 }

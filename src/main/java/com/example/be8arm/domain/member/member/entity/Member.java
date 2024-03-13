@@ -53,4 +53,3 @@ public class Member extends TimeEntity {
 		this.profile = profile;
 	}
 }
-
