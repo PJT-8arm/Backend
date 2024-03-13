@@ -75,7 +75,8 @@ public class MypageController {
 			ProfileDto dto = mypageService.modifyProfile(member.getUsername(), profileDto);
 			responseEntity = ResponseEntity.ok(dto);
 		} catch (Exception e) {
-			responseEntity = ResponseEntity.badRequest().build();
+			throw e;
+			// responseEntity = ResponseEntity.badRequest().build();
 		}
 		return responseEntity;
 	}

@@ -3,9 +3,13 @@ package com.example.be8arm.domain.member.mypage.dto;
 import com.example.be8arm.domain.member.member.entity.Gender;
 import com.example.be8arm.domain.member.member.entity.Profile;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProfileDto {
 	private Integer age;
 

@@ -41,7 +41,7 @@ public class Member extends TimeEntity {
 
 	private String imgUrl; // 프로필 사진
 
-	@OneToOne
+	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
 	private Profile profile;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -58,11 +58,6 @@ public class Member extends TimeEntity {
 
 	public boolean notHasProfile() {
 		return this.profile == null;
-	}
-
-	@Transactional
-	public void createProfile() {
-		this.profile = new Profile(this);
 	}
 
 	@Transactional
@@ -83,5 +78,6 @@ public class Member extends TimeEntity {
 			this.imgUrl = dto.getImgUrl();
 		}
 	}
+
 }
 

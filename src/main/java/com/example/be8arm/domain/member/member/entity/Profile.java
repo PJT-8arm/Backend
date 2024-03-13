@@ -33,12 +33,9 @@ public class Profile extends TimeEntity {
 
 	private Integer totalWeight;
 
-	public Profile(Member member) {
-		this.member = member;
-	}
-
 	public void modify(ProfileDto profileDto) {
 		this.age = profileDto.getAge();
+		this.gender = profileDto.getGender();
 		this.benchPress = profileDto.getBenchPress();
 		this.deadLift = profileDto.getDeadLift();
 		this.squat = profileDto.getSquat();
