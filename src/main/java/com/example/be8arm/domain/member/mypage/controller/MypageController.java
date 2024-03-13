@@ -18,7 +18,6 @@ import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import com.example.be8arm.domain.member.mypage.mypageService.MypageService;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
-import com.example.be8arm.domain.recruitment.recruitment.service.RecruitmentService;
 import com.example.be8arm.global.security.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;
@@ -32,10 +31,10 @@ public class MypageController {
 
 	private final MemberService memberService;
 	private final MypageService mypageService;
-	private final RecruitmentService recruitmentService;
 
 	//todo 보류. GET 회원정보 수정 전 비밀번호 재확인 페이지 - 데이터=username
 	//todo 보류. POST 회원정보 수정 전 비밀번호 재확인 페이지
+
 	@GetMapping("/modify")
 	public ResponseEntity<?> mypageDetails(@AuthenticationPrincipal UserPrincipal member) {
 
@@ -58,7 +57,6 @@ public class MypageController {
 		return responseEntity;
 	}
 
-	// todo GET 프로필 페이지 프로필 데이터 - 24.03.11
 	@GetMapping("/profile")
 	public ResponseEntity<ProfileDto> mypageProfile(@AuthenticationPrincipal UserPrincipal member) {
 		ResponseEntity<ProfileDto> responseEntity;
@@ -72,7 +70,6 @@ public class MypageController {
 		return responseEntity;
 	}
 
-	// todo POST 프로필 수정 프로필 데이터 - 24.03.11
 	@PostMapping("/profile")
 	public ResponseEntity<ProfileDto> mypageModifyProfile(@AuthenticationPrincipal UserPrincipal member,
 		@RequestBody ProfileDto profileDto) {
@@ -86,14 +83,14 @@ public class MypageController {
 		return responseEntity;
 	}
 
-	// todo GET 내가 작성한 글 조회 모집글 데이터 - 24.03.11
+	// todo Member(작성자) 정보 누락되어 있음. 순환참조 문제. - 24.03.13
 	@GetMapping("/myRecruitment")
 	public ResponseEntity<List<RecruitmentListResponseDto>> mypageMyRecruitment(
 		@AuthenticationPrincipal UserPrincipal memberPrincipal) {
 		ResponseEntity<List<RecruitmentListResponseDto>> responseEntity;
 		try {
 			Member member = memberService.findByUsername(memberPrincipal.getUsername());
-			List<RecruitmentListResponseDto> recruitmentList = recruitmentService.findMyRecruitmentList(member);
+			List<RecruitmentListResponseDto> recruitmentList = mypageService.findMyRecruitment(member);
 			responseEntity = ResponseEntity.ok(recruitmentList);
 		} catch (Exception e) {
 			responseEntity = ResponseEntity.badRequest().build();

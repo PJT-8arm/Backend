@@ -1,14 +1,17 @@
 package com.example.be8arm.domain.member.mypage.mypageService;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.entity.Profile;
-import com.example.be8arm.domain.member.member.repository.MemberRepository;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import com.example.be8arm.domain.member.mypage.repository.ProfileRepository;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.service.RecruitmentService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class MypageService {
 	private final MemberService memberService;
 	private final ProfileRepository profileRepository;
-	private final MemberRepository memberRepository;
+	private final RecruitmentService recruitmentService;
 
 	public ProfileDto getProfile(String username) {
 		Member member = memberService.findByUsername(username);
@@ -48,5 +51,10 @@ public class MypageService {
 		Profile profile = member.getProfile();
 		profile.modify(profileDto);
 		return new ProfileDto(profile);
+	}
+
+	public List<RecruitmentListResponseDto> findMyRecruitment(Member member) {
+		return recruitmentService.findMyRecruitmentList(member);
+
 	}
 }
