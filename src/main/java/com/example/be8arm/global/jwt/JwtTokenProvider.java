@@ -166,7 +166,7 @@ public class JwtTokenProvider {
 		return JwtToken.builder()
 			.grantType("Bearer")
 			.accessToken(accessToken)
-			.refreshToken(null)
+			.refreshToken(null) // AccessToken 재발급 시 RefreshToken은 변경하지 않음
 			.build();
 	}
 
