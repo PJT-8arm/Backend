@@ -1,11 +1,11 @@
 package com.example.be8arm.domain.chat.chatRoom.entity;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -42,12 +42,12 @@ public class ChatRoomMember {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
+	@Column(length = 50)
 	private String chatRoomName; //사용자마다 채팅방 이름을 다르게 설정할 수 있도록
 
 	private String imgUrl;
 
-	@CreatedDate
-	private Long lastViewMessageId;
+	private Long lastViewMessageId = 0L;
 
 	public void setChatRoomName(String chatRoomName) {
 		this.chatRoomName = chatRoomName;

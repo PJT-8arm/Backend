@@ -59,7 +59,7 @@ public class ChatMessageService {
 		//채팅방에 메세지 보내기
 		messagingTemplate.convertAndSend("/topic/chat/room/" + chatRoom.getId() + "/message", writeBody);
 
-		List<ChatRoomMember> chatRoomMembers = chatRoomMemberRepository.findChatRoomMemberByChatRoomId(
+		List<ChatRoomMember> chatRoomMembers = chatRoomMemberRepository.findByChatRoomId(
 			chatRoom.getId());
 		//채팅 방에 있는 모든 멤버의 list에 메세지 보내기
 		for (ChatRoomMember ChatRoomMember : chatRoomMembers) {
