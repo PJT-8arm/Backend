@@ -3,6 +3,9 @@ package com.example.be8arm.domain.member.member.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.be8arm.domain.member.member.dto.MemberModifyDto;
 import com.example.be8arm.global.TimeEntity;
 
 import jakarta.persistence.Column;
@@ -38,7 +41,7 @@ public class Member extends TimeEntity {
 
 	private String imgUrl; // 프로필 사진
 
-	@OneToOne
+	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
 	private Profile profile;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -52,5 +55,28 @@ public class Member extends TimeEntity {
 		this.nickname = nickname;
 		this.profile = profile;
 	}
-}
 
+	public boolean notHasProfile() {
+		return this.profile == null;
+	}
+
+	@Transactional
+	public void modify(MemberModifyDto dto) {
+		if (this.nickname == null || (dto.getNickname() != null && !this.nickname.equals(dto.getNickname()))) {
+			this.nickname = dto.getNickname();
+		}
+
+		if (this.name == null || (dto.getName() != null && !this.name.equals(dto.getName()))) {
+			this.name = dto.getName();
+		}
+
+		if (dto.getPostPassword() != null && !this.password.equals(dto.getPostPassword())) {
+			this.password = dto.getPostPassword();
+		}
+
+		if (this.imgUrl == null || (dto.getImgUrl() != null && !this.imgUrl.equals(dto.getImgUrl()))) {
+			this.imgUrl = dto.getImgUrl();
+		}
+	}
+
+}

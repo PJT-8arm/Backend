@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.member.member.dto.MemberDto;
+import com.example.be8arm.domain.member.member.dto.MemberModifyDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.exception.UserAndWriterNotMatchException;
 import com.example.be8arm.domain.member.member.repository.MemberRepository;
 import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
@@ -61,21 +63,6 @@ public class MemberService {
 		return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
 	}
 
-	// public UserPrincipal findByUsername(String username) throws UsernameNotFoundException {
-	// 	Optional<Member> _member = memberRepository.findByUsername(username);
-	//
-	// 	if (_member.isEmpty()) {
-	// 		throw new UsernameNotFoundException(username);
-	// 	}
-	// 	Member member = _member.get();
-	// 	return new UserPrincipal(
-	// 		member.getUsername(),
-	// 		member.getName(),
-	// 		member.getImgUrl(),
-	// 		member.getNickname(),
-	// 		member.getProfile());
-	// }
-	//
 	public Member findByUsername(String username) throws UsernameNotFoundException {
 		Optional<Member> member = memberRepository.findByUsername(username);
 		if (!member.isPresent()) {
@@ -84,5 +71,28 @@ public class MemberService {
 		return member.get();
 	}
 
-}
+	@Transactional
+	public SignUpDto modifyDetails(String username, MemberModifyDto memberModifyDto) {
+		Member member = findByUsername(username);
 
+		// 접속한 유저와 받아온 유저 정보 확인
+		if (!memberModifyDto.getUsername().equals(member.getUsername())) {
+			throw new UserAndWriterNotMatchException("올바르지 않은 사용자입니다.");
+		}
+
+		if (memberModifyDto.getPrePassword() != null && !passwordEncoder.matches(memberModifyDto.getPrePassword(),
+			member.getPassword())) {
+			// Todo 비밀번호 관련 exception 추가 필요 - 24.3.11
+			throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
+		}
+
+		// 비밀번호 인코딩
+		if (memberModifyDto.getPostPassword() != null) {
+			memberModifyDto.setPostPassword(passwordEncoder.encode(memberModifyDto.getPostPassword()));
+		}
+
+		member.modify(memberModifyDto);
+
+		return new SignUpDto(member);
+	}
+}
