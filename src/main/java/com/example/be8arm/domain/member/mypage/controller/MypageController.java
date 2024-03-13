@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.member.member.dto.MemberDto;
+import com.example.be8arm.domain.member.member.dto.MemberModifyDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
@@ -39,11 +40,11 @@ public class MypageController {
 	}
 
 	@PostMapping("/modify")
-	public ResponseEntity<SignUpDto> mypageDetailsModify(@AuthenticationPrincipal UserPrincipal member,
-		@RequestBody SignUpDto signUpDto) {
+	public ResponseEntity<SignUpDto> mypageModifyDetails(@AuthenticationPrincipal UserPrincipal member,
+		@RequestBody MemberModifyDto memberModifyDto) {
 		ResponseEntity<SignUpDto> responseEntity;
 		try {
-			SignUpDto dto = memberService.modifyDetails(member.getUsername(), signUpDto);
+			SignUpDto dto = memberService.modifyDetails(member.getUsername(), memberModifyDto);
 			responseEntity = ResponseEntity.ok(dto);
 		} catch (Exception e) {
 			responseEntity = ResponseEntity.badRequest().build();
@@ -78,6 +79,7 @@ public class MypageController {
 		}
 		return responseEntity;
 	}
+
 	// todo GET 내가 작성한 글 조회 모집글 데이터 - 24.03.11
 	// todo GET 내 약속 조회 모집글 데이터 - 24.03.11
 }

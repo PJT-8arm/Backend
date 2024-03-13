@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.member.member.dto.MemberDto;
+import com.example.be8arm.domain.member.member.dto.MemberModifyDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.exception.UserAndWriterNotMatchException;
@@ -71,29 +72,28 @@ public class MemberService {
 	}
 
 	@Transactional
-	public SignUpDto modifyDetails(String username, SignUpDto signUpDto) {
+	public SignUpDto modifyDetails(String username, MemberModifyDto memberModifyDto) {
 		Member member = findByUsername(username);
 
 		// 접속한 유저와 받아온 유저 정보 확인
-		if (!signUpDto.getUsername().equals(member.getUsername())) {
+		if (!memberModifyDto.getUsername().equals(member.getUsername())) {
 			throw new UserAndWriterNotMatchException("올바르지 않은 사용자입니다.");
 		}
 
-		if (!confirmPassword(signUpDto.getPassword(), signUpDto.getCheckPassword())) {
+		if (memberModifyDto.getPrePassword() != null && !passwordEncoder.matches(memberModifyDto.getPrePassword(),
+			member.getPassword())) {
 			// Todo 비밀번호 관련 exception 추가 필요 - 24.3.11
-			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+			throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
 		}
 
 		// 비밀번호 인코딩
-		signUpDto.setPassword(encodingPassword(signUpDto.getPassword()));
+		if (memberModifyDto.getPostPassword() != null) {
+			memberModifyDto.setPostPassword(encodingPassword(memberModifyDto.getPostPassword()));
+		}
 
-		member.modify(signUpDto);
+		member.modify(memberModifyDto);
 
 		return new SignUpDto(member);
-	}
-
-	private boolean confirmPassword(String password, String confirm) {
-		return password.equals(confirm);
 	}
 
 	private String encodingPassword(String password) {

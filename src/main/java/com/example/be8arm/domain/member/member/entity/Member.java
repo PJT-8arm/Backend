@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.be8arm.domain.member.member.dto.SignUpDto;
+import com.example.be8arm.domain.member.member.dto.MemberModifyDto;
 import com.example.be8arm.global.TimeEntity;
 
 import jakarta.persistence.Column;
@@ -66,23 +66,22 @@ public class Member extends TimeEntity {
 	}
 
 	@Transactional
-	public Member modify(SignUpDto dto) {
-		if (!this.nickname.equals(dto.getNickname())) {
+	public void modify(MemberModifyDto dto) {
+		if (this.nickname == null || (dto.getNickname() != null && !this.nickname.equals(dto.getNickname()))) {
 			this.nickname = dto.getNickname();
 		}
 
-		if (!this.name.equals(dto.getName())) {
+		if (this.name == null || (dto.getName() != null && !this.name.equals(dto.getName()))) {
 			this.name = dto.getName();
 		}
 
-		if (!this.password.equals(dto.getPassword())) {
-			this.password = dto.getPassword();
+		if (dto.getPostPassword() != null && !this.password.equals(dto.getPostPassword())) {
+			this.password = dto.getPostPassword();
 		}
 
-		if (!this.imgUrl.equals(dto.getImgUrl())) {
+		if (this.imgUrl == null || (dto.getImgUrl() != null && !this.imgUrl.equals(dto.getImgUrl()))) {
 			this.imgUrl = dto.getImgUrl();
 		}
-		return this;
 	}
 }
 

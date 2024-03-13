@@ -32,6 +32,6 @@ public class MypageService {
 		Member member = memberService.findByUsername(username);
 		Profile profile = member.getProfile();
 		profile.modify(profileDto);
-		return null;
+		return new ProfileDto(profile);
 	}
 }
