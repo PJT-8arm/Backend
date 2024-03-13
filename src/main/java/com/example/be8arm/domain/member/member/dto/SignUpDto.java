@@ -12,8 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -47,5 +49,12 @@ public class SignUpDto {
 			.imgUrl(imgUrl)
 			.roles(roles)
 			.build();
+	}
+
+	public SignUpDto(Member member) {
+		this.username = member.getUsername();
+		this.nickname = member.getNickname();
+		this.name = member.getName();
+		this.imgUrl = member.getImgUrl();
 	}
 }
