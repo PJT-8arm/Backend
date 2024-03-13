@@ -1,5 +1,7 @@
 package com.example.be8arm.domain.member.mypage.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.be8arm.domain.member.member.dto.MemberDto;
 import com.example.be8arm.domain.member.member.dto.MemberModifyDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
+import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import com.example.be8arm.domain.member.mypage.mypageService.MypageService;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.service.RecruitmentService;
 import com.example.be8arm.global.security.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +32,7 @@ public class MypageController {
 
 	private final MemberService memberService;
 	private final MypageService mypageService;
+	private final RecruitmentService recruitmentService;
 
 	//todo 보류. GET 회원정보 수정 전 비밀번호 재확인 페이지 - 데이터=username
 	//todo 보류. POST 회원정보 수정 전 비밀번호 재확인 페이지
@@ -75,12 +81,25 @@ public class MypageController {
 			ProfileDto dto = mypageService.modifyProfile(member.getUsername(), profileDto);
 			responseEntity = ResponseEntity.ok(dto);
 		} catch (Exception e) {
-			throw e;
-			// responseEntity = ResponseEntity.badRequest().build();
+			responseEntity = ResponseEntity.badRequest().build();
 		}
 		return responseEntity;
 	}
 
 	// todo GET 내가 작성한 글 조회 모집글 데이터 - 24.03.11
+	@GetMapping("/myRecruitment")
+	public ResponseEntity<List<RecruitmentListResponseDto>> mypageMyRecruitment(
+		@AuthenticationPrincipal UserPrincipal memberPrincipal) {
+		ResponseEntity<List<RecruitmentListResponseDto>> responseEntity;
+		try {
+			Member member = memberService.findByUsername(memberPrincipal.getUsername());
+			List<RecruitmentListResponseDto> recruitmentList = recruitmentService.findMyRecruitmentList(member);
+			responseEntity = ResponseEntity.ok(recruitmentList);
+		} catch (Exception e) {
+			responseEntity = ResponseEntity.badRequest().build();
+		}
+		return responseEntity;
+	}
+
 	// todo GET 내 약속 조회 모집글 데이터 - 24.03.11
 }
