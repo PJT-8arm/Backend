@@ -88,15 +88,11 @@ public class MemberService {
 
 		// 비밀번호 인코딩
 		if (memberModifyDto.getPostPassword() != null) {
-			memberModifyDto.setPostPassword(encodingPassword(memberModifyDto.getPostPassword()));
+			memberModifyDto.setPostPassword(passwordEncoder.encode(memberModifyDto.getPostPassword()));
 		}
 
 		member.modify(memberModifyDto);
 
 		return new SignUpDto(member);
-	}
-
-	private String encodingPassword(String password) {
-		return passwordEncoder.encode(password);
 	}
 }
