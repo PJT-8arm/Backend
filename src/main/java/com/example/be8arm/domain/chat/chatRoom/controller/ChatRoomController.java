@@ -80,6 +80,7 @@ public class ChatRoomController {
 		@AuthenticationPrincipal UserPrincipal user) {
 		//TODO 무한스크롤 구현
 		List<ChatRoomListDto> chatRooms = chatRoomService.findByMemberId(user.getMember().getId());
+		//List<ChatRoomDetailDto> chatRooms = chatRoomService.showChatRoomList(user.getMember().getId()); TODO 작동하는거 확인하고 수정
 		return ResponseEntity.ok(chatRooms);
 	}
 

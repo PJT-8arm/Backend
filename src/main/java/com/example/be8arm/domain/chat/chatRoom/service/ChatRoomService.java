@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomDetailDto;
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
@@ -36,6 +37,10 @@ public class ChatRoomService {
 			chatRooms.add(new ChatRoomListDto(result));
 		}
 		return chatRooms;
+	}
+
+	public List<ChatRoomDetailDto> showChatRoomList(Long memberId) {
+		return chatRoomRepository.findChatRoomDetailsByMemberId(memberId);
 	}
 
 	public Long findChatRoom(Long myId, Long theirId) {

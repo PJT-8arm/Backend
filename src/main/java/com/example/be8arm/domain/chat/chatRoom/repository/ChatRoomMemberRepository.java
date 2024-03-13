@@ -17,10 +17,6 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
 	@Query("SELECT e.id.chatRoomId FROM ChatRoomMember e WHERE e.id.memberId = :memberId")
 	List<Long> findAllByMemberIdAsList(Long memberId);
 
-	// MemberId로 ChatRoom 목록 조회
-	//    @Query("SELECT crm.chatRoom FROM ChatRoomMember crm WHERE crm.member.id = :memberId")
-	//    List<ChatRoom> findChatRoomListByMemberId(Long memberId);
-
 	boolean existsByChatRoomIdAndMemberId(long roomId, long memberId);
 
 	Long deleteByChatRoomIdAndMemberId(long roomId, long memberId); //삭제된 수 리턴

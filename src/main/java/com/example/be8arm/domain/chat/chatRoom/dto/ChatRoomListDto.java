@@ -17,6 +17,7 @@ public class ChatRoomListDto {
 	private LocalDateTime lastDateTime;
 	private String lastWriter;
 	private String imgUrl;
+	private int unreadMessagesCount;
 
 	public ChatRoomListDto(Object[] result) {
 		this.chatRoomId = (Long)result[0];
@@ -26,5 +27,6 @@ public class ChatRoomListDto {
 		this.lastDateTime = (LocalDateTime)result[4];
 		this.lastWriter = (String)result[5];
 		this.imgUrl = (String)result[6];
+		this.unreadMessagesCount = (int)result[7];
 	}
 }
