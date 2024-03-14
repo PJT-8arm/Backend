@@ -41,7 +41,7 @@ public class RecruitmentController {
         return ResponseEntity.ok(recruitmentList);
     }
 
-    @GetMapping("/list{id}") // 글 상세 보기
+    @GetMapping("/list/{id}") // 글 상세 보기
     public ResponseEntity<RecruitmentListDetailResponseDto> recruitmentDetails(@PathVariable("id") Long id){
         RecruitmentListDetailResponseDto recruitmentDetails = recruitmentService.findRecruitment(id);
         return ResponseEntity.ok(recruitmentDetails);
