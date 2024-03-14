@@ -104,5 +104,6 @@ public class MemberController {
 		MemberDto memberDto = memberService.getMemberByUsername(username);
 
 		return ResponseEntity.ok(memberDto);
+
 	}
 }
