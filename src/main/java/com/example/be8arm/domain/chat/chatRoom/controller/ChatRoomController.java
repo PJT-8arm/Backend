@@ -64,15 +64,16 @@ public class ChatRoomController {
 	) {
 		Optional<ChatRoom> chatRoomOptional = chatRoomService.findById(roomId);
 		//TODO 페이지네이션으로 무한스크롤 구현
-		if (chatRoomOptional.isPresent()) {
-			ChatRoom chatRoom = chatRoomOptional.get();
-			Pageable pageable = PageRequest.of(page, size);
-
-			chatMessageService.showChatMessagesWithPage(roomId, pageable);
-			return ResponseEntity.ok(chatRoom.getChatMessages());
-		} else {
+		if (!chatRoomOptional.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
+
+		ChatRoom chatRoom = chatRoomOptional.get();
+		Pageable pageable = PageRequest.of(page, size);
+
+		chatMessageService.showChatMessagesWithPage(roomId, pageable);
+		return ResponseEntity.ok(chatRoom.getChatMessages());
+
 	}
 
 	@GetMapping("/list")
