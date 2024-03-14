@@ -71,6 +71,13 @@ public class MemberService {
 		return member.get();
 	}
 
+
+	public MemberDto getMemberByUsername(String username) {
+		Optional<Member> optionalMember = memberRepository.findByUsername(username);
+		Member member = optionalMember.orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다: " + username));
+		return MemberDto.toDto(member);
+	}
+
 	@Transactional
 	public SignUpDto modifyDetails(String username, MemberModifyDto memberModifyDto) {
 		Member member = findByUsername(username);
