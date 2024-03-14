@@ -162,12 +162,10 @@ public class JwtTokenProvider {
 			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
 
-		addTokenToCookie(accessToken, refreshToken, response);
-
 		return JwtToken.builder()
 			.grantType("Bearer")
 			.accessToken(accessToken)
-			.refreshToken(null) // AccessToken 재발급 시 RefreshToken은 변경하지 않음
+			.refreshToken(null)
 			.build();
 	}
 
@@ -247,5 +245,5 @@ public class JwtTokenProvider {
 		}
 		return null;
 	}
-	
+
 }
