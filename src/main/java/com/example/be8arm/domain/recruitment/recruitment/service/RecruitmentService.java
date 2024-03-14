@@ -49,20 +49,21 @@ public class RecruitmentService {
 		return new RecruitmentCreateResponseDto(recruitment);
 	}
 
-	public List<RecruitmentListResponseDto> findRecruitmentList() {
-		List<RecruitmentListResponseDto> recruitments = recruitmentRepository.findAll()
-			.stream()
-			.map(recruitment -> new RecruitmentListResponseDto(
-				recruitment.getMember(),
-				recruitment.getTitle(),
-				recruitment.getRecruit_date(),
-				recruitment.getPartnerGender(),
-				recruitment.getPartnerAge(),
-				recruitment.getRoutine()
-			))
-			.toList();
-		return recruitments;
-	}
+    public List<RecruitmentListResponseDto> findRecruitmentList() {
+        List<RecruitmentListResponseDto> recruitments = recruitmentRepository.findAll()
+                .stream()
+                .map(recruitment -> new RecruitmentListResponseDto(
+                        recruitment.getMember(),
+                        recruitment.getId(),
+                        recruitment.getTitle(),
+                        recruitment.getRecruit_date(),
+                        recruitment.getPartnerGender(),
+                        recruitment.getPartnerAge(),
+                        recruitment.getRoutine()
+                        ))
+                .toList();
+        return recruitments;
+    }
 
 	public RecruitmentListDetailResponseDto findRecruitment(Long id) {
 		Recruitment recruitment = recruitmentRepository.findById(id)
