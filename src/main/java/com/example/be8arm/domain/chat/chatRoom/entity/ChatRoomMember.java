@@ -13,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.PrePersist;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,9 +48,17 @@ public class ChatRoomMember {
 
 	private String imgUrl;
 
-	private Long lastViewMessageId = 0L;
+	@Column(nullable = false)
+	private Long lastViewMessageId;
 
 	public void setChatRoomName(String chatRoomName) {
 		this.chatRoomName = chatRoomName;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		if (lastViewMessageId == null) {
+			lastViewMessageId = 0L;
+		}
 	}
 }

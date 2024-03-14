@@ -130,4 +130,9 @@ public class ChatRoomService {
 		chatRoomMember.setChatRoomName(chatRoomName);
 		chatRoomMemberRepository.save(chatRoomMember);
 	}
+
+	public long countChatRoom() {
+		return chatRoomMemberRepository.count();
+	}
+
 }

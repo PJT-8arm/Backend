@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.example.be8arm.domain.chat.chatRoom.service.ChatRoomService;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.entity.Gender;
 import com.example.be8arm.domain.member.member.entity.Member;
@@ -29,6 +30,7 @@ public class NotProde {
 	private final MemberService memberService;
 	private final RecruitmentService recruitmentService;
 	private final MypageService mypageService;
+	private final ChatRoomService chatRoomService;
 
 	@Bean
 	public ApplicationRunner devInit() {
@@ -36,36 +38,42 @@ public class NotProde {
 
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
-
-				for (int i = 0; i < 4; i++) {
-					SignUpDto signUpDto = SignUpDto.builder()
-						.username("user" + i)
-						.password("1234")
-						.checkPassword("1234")
-						.nickname("hihi")
-						.name("user" + i)
-						.build();
-					try {
-						memberService.signUp(signUpDto);
-					} catch (Exception e) {
-						continue;
+				if (chatRoomService.countChatRoom() == 0) {
+					for (int i = 0; i < 4; i++) {
+						SignUpDto signUpDto = SignUpDto.builder()
+							.username("user" + i)
+							.password("1234")
+							.checkPassword("1234")
+							.nickname("hihi" + i)
+							.name("user" + i)
+							.build();
+						try {
+							memberService.signUp(signUpDto);
+						} catch (Exception e) {
+							continue;
+						}
 					}
-				}
-				Member user0 = memberService.findByUsername("user0");
-				Member user1 = memberService.findByUsername("user1");
-				Member user2 = memberService.findByUsername("user2");
-				for (int i = 0; i < 10; i++) {
-					RecruitmentCreateRequestDto RRqdto = RecruitmentCreateRequestDto.builder()
-						.content("content" + i)
-						.duration(LocalTime.now())
-						.title("title" + i)
-						.place("place" + i)
-						.partnerAge(30)
-						.partnerGender(Gender.Female.getValue())
-						.recruit_date(LocalDateTime.now().plus(Period.ofDays(i)))
-						.routine("")
-						.build();
-					recruitmentService.addRecruitment(user1, RRqdto);
+					Member user0 = memberService.findByUsername("user0");
+					Member user1 = memberService.findByUsername("user1");
+					Member user2 = memberService.findByUsername("user2");
+					Member user3 = memberService.findByUsername("user3");
+					for (int i = 0; i < 10; i++) {
+						RecruitmentCreateRequestDto RRqdto = RecruitmentCreateRequestDto.builder()
+							.content("content" + i)
+							.duration(LocalTime.now())
+							.title("title" + i)
+							.place("place" + i)
+							.partnerAge(30)
+							.partnerGender(Gender.Female.getValue())
+							.recruit_date(LocalDateTime.now().plus(Period.ofDays(i)))
+							.routine("")
+							.build();
+						recruitmentService.addRecruitment(user1, RRqdto);
+					}
+
+					chatRoomService.makeChatRoom(user0, user1);
+					chatRoomService.makeChatRoom(user0, user2);
+					chatRoomService.makeChatRoom(user0, user3);
 				}
 			}
 		};
