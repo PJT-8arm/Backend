@@ -2,7 +2,9 @@ package com.example.be8arm.domain.member.member.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,14 +40,22 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public JwtToken logIn(@RequestBody LogInDto loginDto, HttpServletResponse response) {
-		String username = loginDto.getUsername();
-		String password = loginDto.getPassword();
+	public ResponseEntity<String> logIn(@RequestBody LogInDto loginDto, HttpServletResponse response) {
+		try {
+			String username = loginDto.getUsername();
+			String password = loginDto.getPassword();
 
-		JwtToken jwtToken = memberService.logIn(username, password, response);
-		log.info("request username = {}, password = {}", username, password);
-		log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
-		return jwtToken;
+			JwtToken jwtToken = memberService.logIn(username, password, response);
+			log.info("request username = {}, password = {}", username, password);
+			log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(),
+				jwtToken.getRefreshToken());
+
+			return ResponseEntity.ok("로그인 성공");
+
+		} catch (AuthenticationException e) {
+			// 아이디나 비밀번호가 잘못된 경우 처리
+			return ResponseEntity.badRequest().body("아이디 또는 비밀번호를 올바르게 입력해주세요");
+		}
 	}
 
 	@PostMapping("/test")
@@ -82,6 +92,20 @@ public class MemberController {
 		response.addCookie(refreshTokenCookie);
 
 		return ResponseEntity.ok("로그아웃 성공");
+	}
+
+
+	@GetMapping("/info")
+	public ResponseEntity<MemberDto> memberInfo() {
+		// 현재 인증된 사용자 정보 가져오기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+
+		// 사용자 정보 가져오기
+		MemberDto memberDto = memberService.getMemberByUsername(username);
+
+		return ResponseEntity.ok(memberDto);
+
 	}
 
 }
