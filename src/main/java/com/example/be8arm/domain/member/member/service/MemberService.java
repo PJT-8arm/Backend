@@ -101,36 +101,4 @@ public class MemberService {
 
 		return new SignUpDto(member);
 	}
-
-	public MemberDto getMemberByUsername(String username) {
-		Optional<Member> optionalMember = memberRepository.findByUsername(username);
-		Member member = optionalMember.orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다." + username));
-		return MemberDto.toDto(member);
-	}
-
-
-	@Transactional
-	public SignUpDto modifyDetails(String username, MemberModifyDto memberModifyDto) {
-		Member member = findByUsername(username);
-
-		// 접속한 유저와 받아온 유저 정보 확인
-		if (!memberModifyDto.getUsername().equals(member.getUsername())) {
-			throw new UserAndWriterNotMatchException("올바르지 않은 사용자입니다.");
-		}
-
-		if (memberModifyDto.getPrePassword() != null && !passwordEncoder.matches(memberModifyDto.getPrePassword(),
-			member.getPassword())) {
-			// Todo 비밀번호 관련 exception 추가 필요 - 24.3.11
-			throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
-		}
-
-		// 비밀번호 인코딩
-		if (memberModifyDto.getPostPassword() != null) {
-			memberModifyDto.setPostPassword(passwordEncoder.encode(memberModifyDto.getPostPassword()));
-		}
-
-		member.modify(memberModifyDto);
-
-		return new SignUpDto(member);
-	}
 }
