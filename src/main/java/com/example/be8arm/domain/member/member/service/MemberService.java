@@ -101,6 +101,7 @@ public class MemberService {
 
 		return new SignUpDto(member);
 	}
+<<<<<<< HEAD
 
 	public Member findByName(String name) throws UsernameNotFoundException {
 		Optional<Member> member = memberRepository.findByName(name);
@@ -109,4 +110,6 @@ public class MemberService {
 		}
 		return member.get();
 	}
+=======
+>>>>>>> 530926f (fix : 충돌해결)
 }
