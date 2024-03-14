@@ -94,6 +94,7 @@ public class MemberController {
 		return ResponseEntity.ok("로그아웃 성공");
 	}
 
+
 	@GetMapping("/info")
 	public ResponseEntity<MemberDto> memberInfo() {
 		// 현재 인증된 사용자 정보 가져오기
@@ -106,4 +107,5 @@ public class MemberController {
 		return ResponseEntity.ok(memberDto);
 
 	}
+
 }
