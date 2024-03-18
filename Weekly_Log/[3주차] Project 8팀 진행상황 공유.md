@@ -87,4 +87,5 @@ Github Repository URL: https://github.com/PJT-8arm
 
 - 필수) 팀원들과 함께 찍은 인증샷(온라인 만남시 스크린 캡쳐)도 함께 업로드 해주세요 🙂
 
-![스크린샷 2024-03-15 131055.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/c69962b0-3951-485b-b10a-5bb29576bba8/7e2f2365-621a-4fac-8df6-95a1f549f132/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2024-03-15_131055.png)
+![스크린샷 2024-03-15 131055](https://github.com/PJT-8arm/Backend/assets/148295292/cc86089f-9e5d-4f2c-87f5-271b797fd487)
+
