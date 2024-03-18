@@ -35,7 +35,9 @@ public class MemberDto {
 			.name(member.getName())
 			.imgUrl(member.getImgUrl())
 			.roles(member.getRoles())
-			.profile(member.getProfile()).build();
+			.profile(member.getProfile())
+			.build();
+
 	}
 
 	public Member toEntity() {
@@ -48,5 +50,6 @@ public class MemberDto {
 			.roles(roles)
 			.profile(profile)
 			.build();
+
 	}
 }

@@ -41,4 +41,5 @@ public class Profile extends TimeEntity {
 		this.squat = profileDto.getSquat();
 		this.totalWeight = profileDto.getTotalWeight();
 	}
+
 }

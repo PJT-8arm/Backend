@@ -4,12 +4,14 @@ import com.example.be8arm.domain.member.member.entity.Gender;
 import com.example.be8arm.domain.member.member.entity.Profile;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProfileDto {
 	private Integer age;
 
