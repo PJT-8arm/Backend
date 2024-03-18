@@ -71,7 +71,6 @@ public class MemberService {
 		return member.get();
 	}
 
-
 	public MemberDto getMemberByUsername(String username) {
 		Optional<Member> optionalMember = memberRepository.findByUsername(username);
 		Member member = optionalMember.orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다: " + username));
@@ -101,5 +100,13 @@ public class MemberService {
 		member.modify(memberModifyDto);
 
 		return new SignUpDto(member);
+	}
+
+	public Member findByName(String name) throws UsernameNotFoundException {
+		Optional<Member> member = memberRepository.findByName(name);
+		if (!member.isPresent()) {
+			throw new UsernameNotFoundException(name);
+		}
+		return member.get();
 	}
 }

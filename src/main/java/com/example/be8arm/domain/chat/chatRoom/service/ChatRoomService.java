@@ -135,4 +135,8 @@ public class ChatRoomService {
 		return chatRoomMemberRepository.count();
 	}
 
+	public boolean existsById(long roomId) {
+		Optional<ChatRoom> chatRoomOptional = findById(roomId);
+		return chatRoomOptional.isPresent();
+	}
 }

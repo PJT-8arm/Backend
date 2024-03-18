@@ -3,8 +3,10 @@ package com.example.be8arm.domain.chat.chatMessage.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +44,7 @@ public class ChatMessageService {
 
 	@Transactional
 	public ChatMessage writeMessage(ChatRoom chatRoom, String writerName, String content, long senderId) {
-		ChatMessage chatMessage = ChatMessage
-			.builder()
+		ChatMessage chatMessage = ChatMessage.builder()
 			.chatRoom(chatRoom)
 			.writerName(writerName)
 			.content(content)
@@ -59,25 +60,24 @@ public class ChatMessageService {
 		//채팅방에 메세지 보내기
 		messagingTemplate.convertAndSend("/topic/chat/room/" + chatRoom.getId() + "/message", writeBody);
 
-		List<ChatRoomMember> chatRoomMembers = chatRoomMemberRepository.findByChatRoomId(
-			chatRoom.getId());
+		List<ChatRoomMember> chatRoomMembers = chatRoomMemberRepository.findByChatRoomId(chatRoom.getId());
 		//채팅 방에 있는 모든 멤버의 list에 메세지 보내기
 		for (ChatRoomMember ChatRoomMember : chatRoomMembers) {
 			writeBody.setChatRoomName(ChatRoomMember.getChatRoomName());
 			writeBody.setImgUrl(ChatRoomMember.getImgUrl());
-			messagingTemplate.convertAndSend("/topic/chat/room/list/"
-				+ ChatRoomMember.getId().getMemberId() //memberId
+			messagingTemplate.convertAndSend("/topic/chat/room/list/" + ChatRoomMember.getId().getMemberId() //memberId
 				+ "/message", writeBody);
 		}
 
 	}
 
-	public List<ChatMessage> findByChatRoomIdAndIdAfter(long roomId, long afterId) {
-		return chatMessageRepository.findByChatRoomIdAndIdAfter(roomId, afterId);
+	public Slice<ChatMessage> findMessagesBeforeId(long roomId, Long lastMessageId, int size) {
+		Pageable pageable = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "id"));
+		return chatMessageRepository.findByChatRoomIdAndIdLessThanOrderByIdDesc(roomId, lastMessageId, pageable);
 	}
 
-	public Page<ChatMessage> showChatMessagesWithPage(long roomId, Pageable pageable) {
-		return chatMessageRepository.findByChatRoomIdOrderByIdDesc(roomId, pageable);
+	public Long findLastChatMessageIdInChatRoom(long roomId) {
+		return chatMessageRepository.findLastChatMessageIdInChatRoom(roomId);
 	}
 
 	// public long countMessageUnReaded(long memberId) {

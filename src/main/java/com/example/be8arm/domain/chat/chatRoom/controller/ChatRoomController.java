@@ -1,10 +1,9 @@
 package com.example.be8arm.domain.chat.chatRoom.controller;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,39 +16,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.be8arm.domain.chat.chatMessage.dto.ChatMessagesDto;
+import com.example.be8arm.domain.chat.chatMessage.entity.ChatMessage;
 import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.ModifyRequestBody;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.WriteRequestBody;
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomInfoDto;
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
-import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 import com.example.be8arm.domain.chat.chatRoom.service.ChatRoomService;
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.global.security.UserPrincipal;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("api/chat/room")
+@RequestMapping("/api/chat/room")
 @RequiredArgsConstructor
+@Slf4j
+@Tag(name = "Chat", description = "Chat API")
 public class ChatRoomController {
 	private final ChatRoomService chatRoomService;
 	private final ChatMessageService chatMessageService;
 	private final MemberService memberService;
 
 	@GetMapping("/{roomId}")
-	public ResponseEntity<?> showRoom(
-		@PathVariable final long roomId,
-		@AuthenticationPrincipal UserPrincipal user
-	) {
+	@Operation(summary = "채팅방 정보 조회")
+	@ApiResponse(responseCode = "200", description = "채팅방 정보 반환", content = {
+		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatRoomInfoDto.class))})
+	@ApiResponse(responseCode = "404", description = "채팅방을 찾을 수 없음")
+	@ApiResponse(responseCode = "403", description = "접근 권한이 없음")
+	public ResponseEntity<?> showRoom(@PathVariable final long roomId, @AuthenticationPrincipal UserPrincipal user) {
+		if (!chatRoomService.existsById(roomId)) {
+			return ResponseEntity.notFound().build();
+		}
 		if (!chatRoomService.isIncludeMe(user.getMember().getId(), roomId)) {
-			return ResponseEntity.badRequest().body("채팅방 입장 권한이 없습니다.");
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("접근 권한이 없습니다.");
 		}
 
-		ChatRoomMember chatRoomMember = chatRoomService
-			.findChatRoomMemberByChatRoomIdAndMemberId(user.getMember().getId(), roomId);
+		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(
+			user.getMember().getId(), roomId);
 
 		ChatRoomInfoDto chatRoomInfoDto = new ChatRoomInfoDto(chatRoomMember);
 
@@ -57,28 +70,29 @@ public class ChatRoomController {
 	}
 
 	@GetMapping("/{roomId}/messages")
-	public ResponseEntity<?> showMessages(
-		@PathVariable final long roomId,
-		@RequestParam(value = "page", defaultValue = "0") int page,
-		@RequestParam(value = "size", defaultValue = "30") int size
-	) {
-		Optional<ChatRoom> chatRoomOptional = chatRoomService.findById(roomId);
-		//TODO 페이지네이션으로 무한스크롤 구현
-		if (!chatRoomOptional.isPresent()) {
-			return ResponseEntity.notFound().build();
+	@Operation(summary = "채팅방 정보 조회")
+	@ApiResponse(responseCode = "200", description = "채팅메세지 반환", content = {
+		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatMessagesDto.class))})
+	public ResponseEntity<?> showMessages(@PathVariable long roomId,
+		@RequestParam(value = "lastId", required = false) Long lastMessageId,
+		@RequestParam(value = "size", defaultValue = "30") int size) {
+
+		if (lastMessageId == null) {
+			lastMessageId = chatMessageService.findLastChatMessageIdInChatRoom(roomId) + 1L;
 		}
 
-		ChatRoom chatRoom = chatRoomOptional.get();
-		Pageable pageable = PageRequest.of(page, size);
+		Slice<ChatMessage> messageSlice = chatMessageService.findMessagesBeforeId(roomId, lastMessageId, size);
 
-		chatMessageService.showChatMessagesWithPage(roomId, pageable);
-		return ResponseEntity.ok(chatRoom.getChatMessages());
+		ChatMessagesDto chatMessagesDto = new ChatMessagesDto(messageSlice);
 
+		return ResponseEntity.ok(chatMessagesDto);
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<?> showList(
-		@AuthenticationPrincipal UserPrincipal user) {
+	@Operation(summary = "채팅방 목록 조회")
+	@ApiResponse(responseCode = "200", description = "채팅방 목록 반환", content = {
+		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatRoomListDto.class))})
+	public ResponseEntity<?> showList(@AuthenticationPrincipal UserPrincipal user) {
 		//TODO 무한스크롤 구현
 		List<ChatRoomListDto> chatRooms = chatRoomService.findByMemberId(user.getMember().getId());
 		//List<ChatRoomDetailDto> chatRooms = chatRoomService.showChatRoomList(user.getMember().getId()); TODO 작동하는거 확인하고 수정
@@ -86,25 +100,25 @@ public class ChatRoomController {
 	}
 
 	@PostMapping("/{roomId}/write")
+	@Operation(summary = "메세지 전송")
 	public ResponseEntity<?> write(
 		//TODO roomId를 request에 넣을지 말지
-		@PathVariable final long roomId,
-		@AuthenticationPrincipal UserPrincipal user,
-		@RequestBody final WriteRequestBody requestBody
-	) {
-		chatMessageService.writeAndSend(roomId, user.getMember().getName(),
-			requestBody.getContent(), "created", user.getMember().getId());
+		@PathVariable final long roomId, @AuthenticationPrincipal UserPrincipal user,
+		@RequestBody final WriteRequestBody requestBody) {
+		chatMessageService.writeAndSend(roomId, user.getMember().getName(), requestBody.getContent(), "created",
+			user.getMember().getId());
 
 		return ResponseEntity.ok("성공");
 	}
 
-	@GetMapping("/make/{theirInfo}")
-	public ResponseEntity<?> makeChatRoom(
-		@AuthenticationPrincipal UserPrincipal user,
-		@PathVariable String theirUsername //
+	@GetMapping("/make/{theirName}")
+	@Operation(summary = "채팅방 생성")
+	@ApiResponse(responseCode = "200", description = "채팅방 정보 반환", content = {
+		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatRoomInfoDto.class))})
+	public ResponseEntity<?> makeChatRoom(@AuthenticationPrincipal UserPrincipal user, @PathVariable String theirName //
 	) {
 		Member myMember = user.getMember();
-		Member theirMember = memberService.findByUsername(theirUsername);
+		Member theirMember = memberService.findByName(theirName);
 
 		Long chatRoomId;
 		//이미 존재 하는 방일 때 0보다 큰값이 return됨
@@ -124,9 +138,8 @@ public class ChatRoomController {
 	}
 
 	@DeleteMapping("/exit/{chatRoomId}")
-	public ResponseEntity<?> exitChatRoom(
-		@PathVariable Long chatRoomId,
-		@AuthenticationPrincipal UserPrincipal user) {
+	@Operation(summary = "채팅방 나가기")
+	public ResponseEntity<?> exitChatRoom(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user) {
 
 		if (!chatRoomService.isIncludeMe(user.getMember().getId(), chatRoomId)) {
 			return ResponseEntity.badRequest().body("권한이 없습니다.");
@@ -143,10 +156,11 @@ public class ChatRoomController {
 	}
 
 	@PatchMapping("/modify/{chatRoomId}")
-	public ResponseEntity<?> modifyChatRoomName(
-		@PathVariable Long chatRoomId,
-		@AuthenticationPrincipal UserPrincipal user,
-		@RequestBody final ModifyRequestBody modifyBody) {
+	@Operation(summary = "채팅방 이름 수정", description = "지정된 채팅방의 이름을 수정합니다.")
+	@ApiResponse(responseCode = "200", description = "성공적으로 수정됨")
+	@ApiResponse(responseCode = "400", description = "권한이 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
+	public ResponseEntity<?> modifyChatRoomName(@PathVariable Long chatRoomId,
+		@AuthenticationPrincipal UserPrincipal user, @RequestBody final ModifyRequestBody modifyBody) {
 
 		if (!chatRoomService.isIncludeMe(user.getMember().getId(), chatRoomId)) {
 			return ResponseEntity.badRequest().body("권한이 없습니다.");
