@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.global.IdEntity;
 
@@ -34,6 +36,7 @@ public class ChatMessage extends IdEntity {
 	private LocalDateTime createDate;
 
 	@ManyToOne
+	@JsonIgnore
 	private ChatRoom chatRoom;
 
 	private String writerName;

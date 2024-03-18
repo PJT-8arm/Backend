@@ -21,13 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final JwtTokenProvider jwtTokenProvider;
-
-	private static final String[] AUTH_WHITELIST = {
-		"/api/**", "/graphiql", "/graphql",
-		"/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
-		"/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
-	};
-
+	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
@@ -56,7 +50,6 @@ public class SecurityConfig {
 				auth ->
 					auth
 						.requestMatchers("/**").permitAll()  // 해당 API에 대해서는 모든 요청을 허가
-						.requestMatchers(AUTH_WHITELIST).permitAll()
 						.requestMatchers("/members/test").hasRole("USER") // USER 권한이 있어야 요청할 수 있음
 						.anyRequest().authenticated()
 			)
