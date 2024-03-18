@@ -18,6 +18,7 @@ public class CorsConfig {
 		config.addAllowedOrigin("http://localhost:3000"); // 리액트 애플리케이션의 주소로 변경
 		config.addAllowedMethod("*");
 		config.addAllowedHeader("*");
+		config.setAllowCredentials(true);
 
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);

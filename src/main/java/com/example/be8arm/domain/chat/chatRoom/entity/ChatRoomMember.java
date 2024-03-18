@@ -1,11 +1,11 @@
 package com.example.be8arm.domain.chat.chatRoom.entity;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -13,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.PrePersist;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,14 +43,22 @@ public class ChatRoomMember {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
+	@Column(length = 50)
 	private String chatRoomName; //사용자마다 채팅방 이름을 다르게 설정할 수 있도록
 
 	private String imgUrl;
 
-	@CreatedDate
+	@Column(nullable = false)
 	private Long lastViewMessageId;
 
 	public void setChatRoomName(String chatRoomName) {
 		this.chatRoomName = chatRoomName;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		if (lastViewMessageId == null) {
+			lastViewMessageId = 0L;
+		}
 	}
 }
