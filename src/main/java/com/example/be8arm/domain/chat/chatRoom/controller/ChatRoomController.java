@@ -96,7 +96,7 @@ public class ChatRoomController {
 		return ResponseEntity.ok("성공");
 	}
 
-	@GetMapping("/make/{theirInfo}")
+	@GetMapping("/make/{theirUsername}")
 	public ResponseEntity<?> makeChatRoom(
 		@AuthenticationPrincipal UserPrincipal user,
 		@PathVariable String theirUsername //
