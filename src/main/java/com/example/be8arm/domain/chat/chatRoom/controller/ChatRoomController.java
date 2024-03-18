@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.be8arm.domain.chat.chatMessage.ChatMessagesResponse;
 import com.example.be8arm.domain.chat.chatMessage.dto.ChatMessagesDto;
-import com.example.be8arm.domain.chat.chatMessage.entity.ChatMessage;
 import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.ModifyRequestBody;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.WriteRequestBody;
@@ -81,11 +81,11 @@ public class ChatRoomController {
 			lastMessageId = chatMessageService.findLastChatMessageIdInChatRoom(roomId) + 1L;
 		}
 
-		Slice<ChatMessage> messageSlice = chatMessageService.findMessagesBeforeId(roomId, lastMessageId, size);
+		Slice<ChatMessagesDto> messageSlice = chatMessageService.findMessagesBeforeId(roomId, lastMessageId, size);
 
-		ChatMessagesDto chatMessagesDto = new ChatMessagesDto(messageSlice);
+		ChatMessagesResponse response = new ChatMessagesResponse(messageSlice);
 
-		return ResponseEntity.ok(chatMessagesDto);
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/list")

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
 import com.example.be8arm.domain.chat.chatRoom.service.ChatRoomService;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.entity.Gender;
@@ -31,6 +32,7 @@ public class NotProde {
 	private final RecruitmentService recruitmentService;
 	private final MypageService mypageService;
 	private final ChatRoomService chatRoomService;
+	private final ChatMessageService chatMessageService;
 
 	@Bean
 	public ApplicationRunner devInit() {
@@ -74,7 +76,14 @@ public class NotProde {
 					chatRoomService.makeChatRoom(user0, user1);
 					chatRoomService.makeChatRoom(user0, user2);
 					chatRoomService.makeChatRoom(user0, user3);
+					for (int i = 0; i < 35; i += 2) {
+						chatMessageService.writeAndSend(1, "user0", "메세지" + i, "created",
+							1);
+						chatMessageService.writeAndSend(1, "user1", "메세지" + i + 1, "created",
+							2);
+					}
 				}
+
 			}
 		};
 	}

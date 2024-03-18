@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.be8arm.domain.chat.chatMessage.dto.ChatMessagesDto;
 import com.example.be8arm.domain.chat.chatMessage.entity.ChatMessage;
 import com.example.be8arm.domain.chat.chatMessage.repository.ChatMessageRepository;
 import com.example.be8arm.domain.chat.chatRoom.controller.response.WriteResponseBody;
@@ -71,7 +72,7 @@ public class ChatMessageService {
 
 	}
 
-	public Slice<ChatMessage> findMessagesBeforeId(long roomId, Long lastMessageId, int size) {
+	public Slice<ChatMessagesDto> findMessagesBeforeId(long roomId, Long lastMessageId, int size) {
 		Pageable pageable = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "id"));
 		return chatMessageRepository.findByChatRoomIdAndIdLessThanOrderByIdDesc(roomId, lastMessageId, pageable);
 	}
