@@ -2,7 +2,10 @@ package com.example.be8arm.domain.recruitment.recruitment.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
+import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
+import com.example.be8arm.domain.recruitment.recruitment.entity.RecruitmentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,15 +55,7 @@ public class RecruitmentService {
     public List<RecruitmentListResponseDto> findRecruitmentList() {
         List<RecruitmentListResponseDto> recruitments = recruitmentRepository.findAll()
                 .stream()
-                .map(recruitment -> new RecruitmentListResponseDto(
-                        recruitment.getMember(),
-                        recruitment.getId(),
-                        recruitment.getTitle(),
-                        recruitment.getRecruit_date(),
-                        recruitment.getPartnerGender(),
-                        recruitment.getPartnerAge(),
-                        recruitment.getRoutine()
-                        ))
+                .map(RecruitmentListResponseDto::new)
                 .toList();
         return recruitments;
     }
@@ -105,16 +100,11 @@ public class RecruitmentService {
 	public List<RecruitmentListResponseDto> findMyRecruitmentList(Member member) {
 		List<Recruitment> recruitments = recruitmentRepository.findAllByMember(member);
 
-		return recruitments
-			.stream()
-			.map(recruitment -> RecruitmentListResponseDto.builder()
-				.title(recruitment.getTitle())
-				.recruit_date(recruitment.getRecruit_date())
-				.routine(recruitment.getRoutine())
-				.partnerGender(recruitment.getPartnerGender())
-				.partnerAge(recruitment.getPartnerAge())
-				.build()
-			)
-			.toList();
+		return recruitments.stream()
+				.map(recruitment -> new RecruitmentListResponseDto(
+						new MemberInfoDto(recruitment.getMember()), // MemberInfoDto 생성자에 필요한 파라미터를 전달
+						new RecruitmentDto(recruitment) // RecruitmentDto 생성자에 필요한 파라미터를 전달
+				))
+				.collect(Collectors.toList());
 	}
 }

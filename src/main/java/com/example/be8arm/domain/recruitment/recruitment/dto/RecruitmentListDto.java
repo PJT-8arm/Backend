@@ -1,6 +1,9 @@
 package com.example.be8arm.domain.recruitment.recruitment.dto;
 
 import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
+import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
+import com.example.be8arm.domain.recruitment.recruitment.entity.RecruitmentDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,9 +15,12 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class RecruitmentListDto { // 전체 글 조회 dto
-    private Member member;
+    private MemberInfoDto memberInfoDto;
 
-    private String title;
+    private RecruitmentDto recruitmentDto;
 
-    private LocalDateTime recruit_date;
+    public RecruitmentListDto(Recruitment recruitment) {
+        this.memberInfoDto = new MemberInfoDto(recruitment.getMember());
+        this.recruitmentDto = new RecruitmentDto(recruitment);
+    }
 }
