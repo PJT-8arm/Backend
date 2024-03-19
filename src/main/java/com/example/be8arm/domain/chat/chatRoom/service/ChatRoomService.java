@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomDetailDto;
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
@@ -36,6 +37,10 @@ public class ChatRoomService {
 			chatRooms.add(new ChatRoomListDto(result));
 		}
 		return chatRooms;
+	}
+
+	public List<ChatRoomDetailDto> showChatRoomList(Long memberId) {
+		return chatRoomRepository.findChatRoomDetailsByMemberId(memberId);
 	}
 
 	public Long findChatRoom(Long myId, Long theirId) {
@@ -98,14 +103,14 @@ public class ChatRoomService {
 	}
 
 	public ChatRoomMember findChatRoomMemberByChatRoomIdAndMemberId(long memberId, long roomId) {
-		return chatRoomMemberRepository.findChatRoomMemberByChatRoomIdAndMemberId(roomId, memberId)
+		return chatRoomMemberRepository.findByChatRoomIdAndMemberId(roomId, memberId)
 			.orElseThrow(() -> new NoSuchElementException("채팅방 정보가 존재하지 않습니다."));
 	}
 
 	@Transactional
 	public boolean deleteChatRoomByMemberIdAndChatRoomId(long memberId, long chatRoomId) {
 		//삭제된 chatRoomMember의 개수를 리턴해서 0보다 크다면 삭제되었다고 판단
-		Long successCode = chatRoomMemberRepository.deleteChatRoomMemberByChatRoomIdAndMemberId(chatRoomId, memberId);
+		Long successCode = chatRoomMemberRepository.deleteByChatRoomIdAndMemberId(chatRoomId, memberId);
 
 		if (countMemberInChatRoom(chatRoomId) == 0) {
 			chatRoomRepository.deleteById(chatRoomId);
@@ -120,9 +125,18 @@ public class ChatRoomService {
 
 	@Transactional
 	public void modifyChatRoomName(long memberId, long chatRoomId, String chatRoomName) {
-		ChatRoomMember chatRoomMember = chatRoomMemberRepository.findChatRoomMemberByChatRoomIdAndMemberId(chatRoomId,
+		ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMemberId(chatRoomId,
 			memberId).orElseThrow();
 		chatRoomMember.setChatRoomName(chatRoomName);
 		chatRoomMemberRepository.save(chatRoomMember);
+	}
+
+	public long countChatRoom() {
+		return chatRoomMemberRepository.count();
+	}
+
+	public boolean existsById(long roomId) {
+		Optional<ChatRoom> chatRoomOptional = findById(roomId);
+		return chatRoomOptional.isPresent();
 	}
 }
