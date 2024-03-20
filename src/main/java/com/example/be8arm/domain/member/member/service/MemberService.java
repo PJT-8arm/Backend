@@ -86,20 +86,27 @@ public class MemberService {
 			throw new UserAndWriterNotMatchException("올바르지 않은 사용자입니다.");
 		}
 
-		if (memberModifyDto.getPrePassword() != null && !passwordEncoder.matches(memberModifyDto.getPrePassword(),
+		if (pwIsNotNullOrNotBlank(memberModifyDto.getPrePassword()) && !passwordEncoder.matches(
+			memberModifyDto.getPrePassword(),
 			member.getPassword())) {
 			// Todo 비밀번호 관련 exception 추가 필요 - 24.3.11
 			throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
 		}
 
 		// 비밀번호 인코딩
-		if (memberModifyDto.getPostPassword() != null) {
+		if (pwIsNotNullOrNotBlank(memberModifyDto.getPostPassword())) {
 			memberModifyDto.setPostPassword(passwordEncoder.encode(memberModifyDto.getPostPassword()));
 		}
 
 		member.modify(memberModifyDto);
 
 		return new SignUpDto(member);
+	}
+
+	public boolean pwIsNotNullOrNotBlank(String password) {
+		if (password == null)
+			return false;
+		return !password.isEmpty() && !password.isBlank();
 	}
 
 	public Member findByName(String name) throws UsernameNotFoundException {
