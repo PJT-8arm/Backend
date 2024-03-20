@@ -1,7 +1,10 @@
 package com.example.be8arm.domain.recruitment.recruitment.dto;
 
 import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
+import com.example.be8arm.domain.member.member.entity.ProfileDto;
 import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
+import com.example.be8arm.domain.recruitment.recruitment.entity.RecruitmentDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,36 +18,22 @@ import java.time.LocalTime;
 @ToString
 public class RecruitmentListDetailResponseDto {
 
-    private Long id;
 
-    private Member member;
+    private MemberInfoDto memberInfoDto;
 
-    private String title;
+    private RecruitmentDto recruitmentDto;
 
-    private String content;
-
-    private LocalDateTime recruit_date;
-
-    private String place;
-
-    private String partnerGender;
-
-    private Integer partnerAge;
-
-    private String routine;
-
-    private LocalTime duration;
+    private ProfileDto profileDto;
 
     public RecruitmentListDetailResponseDto(Recruitment recruitment) {
-        this.id = recruitment.getId();
-        this.member = recruitment.getMember();
-        this.title = recruitment.getTitle();
-        this.content = recruitment.getContent();
-        this.recruit_date = recruitment.getRecruit_date();
-        this.place = recruitment.getPlace();
-        this.partnerGender = recruitment.getPartnerGender();
-        this.partnerAge = recruitment.getPartnerAge();
-        this.routine = recruitment.getRoutine();
-        this.duration = recruitment.getDuration();
+        this.memberInfoDto = new MemberInfoDto(recruitment.getMember());
+        this.recruitmentDto = new RecruitmentDto(recruitment);
+
+        // recruitment.getMember().getProfile()이 null인 경우를 체크하여 처리
+        if (recruitment.getMember().getProfile() != null) {
+            this.profileDto = new ProfileDto(recruitment.getMember().getProfile());
+        } else {
+            this.profileDto = null; // 또는 적절한 기본 값을 설정
+        }
     }
 }
