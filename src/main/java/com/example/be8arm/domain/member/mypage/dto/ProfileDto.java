@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProfileDto {
+	private Long id;
+
 	private Integer age;
 
 	private Gender gender;
@@ -26,12 +28,24 @@ public class ProfileDto {
 	private Integer totalWeight;
 
 	public ProfileDto(Profile profile) {
+		this.id = profile.getId();
 		this.age = profile.getAge();
 		this.gender = profile.getGender();
 		this.benchPress = profile.getBenchPress();
 		this.deadLift = profile.getDeadLift();
 		this.squat = profile.getSquat();
 		this.totalWeight = profile.getTotalWeight();
+	}
+
+	public Profile toEntity() {
+		return Profile.builder()
+			.age(age)
+			.benchPress(benchPress)
+			.deadLift(deadLift)
+			.gender(gender)
+			.squat(squat)
+			.totalWeight(totalWeight)
+			.build();
 	}
 
 }
