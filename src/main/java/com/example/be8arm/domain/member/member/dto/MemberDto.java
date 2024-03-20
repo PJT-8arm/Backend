@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.be8arm.domain.member.member.entity.Member;
-import com.example.be8arm.domain.member.member.entity.Profile;
+import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +24,7 @@ public class MemberDto {
 	private String nickname;
 	private String name;
 	private String imgUrl;
-	private Profile profile;
+	private ProfileDto profile;
 	private List<String> roles = new ArrayList<>();
 
 	static public MemberDto toDto(Member member) {
@@ -35,7 +35,7 @@ public class MemberDto {
 			.name(member.getName())
 			.imgUrl(member.getImgUrl())
 			.roles(member.getRoles())
-			.profile(member.getProfile()).build();
+			.profile(new ProfileDto(member.getProfile())).build();
 	}
 
 	public Member toEntity() {
@@ -46,7 +46,7 @@ public class MemberDto {
 			.name(name)
 			.imgUrl(imgUrl)
 			.roles(roles)
-			.profile(profile)
+			.profile(profile.toEntity())
 			.build();
 	}
 }
