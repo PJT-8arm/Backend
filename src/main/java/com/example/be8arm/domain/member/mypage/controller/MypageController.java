@@ -48,12 +48,12 @@ public class MypageController {
 	public ResponseEntity<SignUpDto> mypageModifyDetails(@AuthenticationPrincipal UserPrincipal member,
 		@RequestBody MemberModifyDto memberModifyDto) {
 		ResponseEntity<SignUpDto> responseEntity;
-		// try {
-		SignUpDto dto = memberService.modifyDetails(member.getUsername(), memberModifyDto);
-		responseEntity = ResponseEntity.ok(dto);
-		// } catch (Exception e) {
-		// 	responseEntity = ResponseEntity.badRequest().build();
-		// }
+		try {
+			SignUpDto dto = memberService.modifyDetails(member.getUsername(), memberModifyDto);
+			responseEntity = ResponseEntity.ok(dto);
+		} catch (Exception e) {
+			responseEntity = ResponseEntity.badRequest().build();
+		}
 		return responseEntity;
 	}
 
