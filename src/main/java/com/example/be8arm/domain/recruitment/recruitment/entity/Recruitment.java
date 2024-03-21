@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.global.TimeEntity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -33,6 +34,7 @@ public class Recruitment extends TimeEntity {
 
 	private String content;
 
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime recruit_date;
 
 	private String place;
