@@ -28,6 +28,12 @@ public class MemberDto {
 	private List<String> roles = new ArrayList<>();
 
 	static public MemberDto toDto(Member member) {
+		ProfileDto profileDto;
+		if (member.notHasProfile()) {
+			profileDto = null;
+		} else {
+			profileDto = new ProfileDto(member.getProfile());
+		}
 		return MemberDto.builder()
 			.id(member.getId())
 			.username(member.getUsername())
@@ -35,7 +41,7 @@ public class MemberDto {
 			.name(member.getName())
 			.imgUrl(member.getImgUrl())
 			.roles(member.getRoles())
-			.profile(new ProfileDto(member.getProfile())).build();
+			.profile(profileDto).build();
 	}
 
 	public Member toEntity() {

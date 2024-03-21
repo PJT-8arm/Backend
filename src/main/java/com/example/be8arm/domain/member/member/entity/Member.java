@@ -70,7 +70,9 @@ public class Member extends TimeEntity {
 			this.name = dto.getName();
 		}
 
-		if (dto.getPostPassword() != null && !this.password.equals(dto.getPostPassword())) {
+		if (dto.getPostPassword() != null && !dto.getPostPassword().isEmpty() && !dto.getPostPassword().isBlank()
+			&& !this.password.equals(
+			dto.getPostPassword())) {
 			this.password = dto.getPostPassword();
 		}
 
