@@ -24,6 +24,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @SuperBuilder
 public class RecruitmentDto {
+	private Long id;
 
 	private String title;
 
@@ -43,6 +44,7 @@ public class RecruitmentDto {
 
 
 	public RecruitmentDto(Recruitment recruitment) {
+		this.id = recruitment.getId();
 		this.title = recruitment.getTitle();
 		this.content = recruitment.getContent();
 		this.recruit_date = recruitment.getRecruit_date();
