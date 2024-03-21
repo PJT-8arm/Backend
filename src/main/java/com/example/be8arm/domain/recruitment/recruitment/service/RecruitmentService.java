@@ -40,7 +40,7 @@ public class RecruitmentService {
 			.member(member)
 			.title(recruitmentCreateRequestDto.getTitle())
 			.content(recruitmentCreateRequestDto.getContent())
-			.recruit_date(recruitmentCreateRequestDto.getRecruit_date())
+			.recruit_date(recruitmentCreateRequestDto.getRecruitDate())
 			.place(recruitmentCreateRequestDto.getPlace())
 			.partnerGender(recruitmentCreateRequestDto.getPartnerGender())
 			.partnerAge(recruitmentCreateRequestDto.getPartnerAge())
@@ -76,7 +76,7 @@ public class RecruitmentService {
 
 		existingRecruitment.setTitle(recruitmentUpdateRequestDto.getTitle());
 		existingRecruitment.setContent(recruitmentUpdateRequestDto.getContent());
-		existingRecruitment.setRecruit_date(recruitmentUpdateRequestDto.getRecruit_date());
+		existingRecruitment.setRecruit_date(recruitmentUpdateRequestDto.getRecruitDate());
 		existingRecruitment.setPlace(recruitmentUpdateRequestDto.getPlace());
 		existingRecruitment.setPartnerGender(recruitmentUpdateRequestDto.getPartnerGender());
 		existingRecruitment.setPartnerAge(recruitmentUpdateRequestDto.getPartnerAge());
