@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.member.member.dto.MemberDto;
@@ -86,7 +87,8 @@ public class MypageController {
 	// todo Member(작성자) 정보 누락되어 있음. 순환참조 문제. - 24.03.13
 	@GetMapping("/myRecruitment")
 	public ResponseEntity<List<RecruitmentListResponseDto>> mypageMyRecruitment(
-		@AuthenticationPrincipal UserPrincipal memberPrincipal) {
+		@AuthenticationPrincipal UserPrincipal memberPrincipal,
+		@RequestParam(name = "page") Long page) {
 		ResponseEntity<List<RecruitmentListResponseDto>> responseEntity;
 		try {
 			Member member = memberService.findByUsername(memberPrincipal.getUsername());

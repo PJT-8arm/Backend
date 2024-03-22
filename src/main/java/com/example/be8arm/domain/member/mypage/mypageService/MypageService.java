@@ -54,7 +54,12 @@ public class MypageService {
 	}
 
 	public List<RecruitmentListResponseDto> findMyRecruitment(Member member) {
-		return recruitmentService.findMyRecruitmentList(member);
+		List<RecruitmentListResponseDto> list = recruitmentService.findMyRecruitmentList(member);
+
+		//pagination
+		// Pageable pageable =
+		//
+		// return new PageImpl<>(list, )
 
 	}
 }
