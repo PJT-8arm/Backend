@@ -1,7 +1,13 @@
 package com.example.be8arm.domain.member.mypage.mypageService;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,13 +59,15 @@ public class MypageService {
 		return new ProfileDto(profile);
 	}
 
-	public List<RecruitmentListResponseDto> findMyRecruitment(Member member) {
+	public Page<RecruitmentListResponseDto> findMyRecruitment(Member member, int page) {
 		List<RecruitmentListResponseDto> list = recruitmentService.findMyRecruitmentList(member);
 
 		//pagination
-		// Pageable pageable =
-		//
-		// return new PageImpl<>(list, )
+		List<Sort.Order> sorts = new ArrayList<>();
+		sorts.add(Sort.Order.asc("createDate"));
+		int pagesize = 10;
+		Pageable pageable = PageRequest.of(page, pagesize, Sort.by(sorts));
 
+		return new PageImpl<>(list, pageable, list.size());
 	}
 }

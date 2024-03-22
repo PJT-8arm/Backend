@@ -1,7 +1,6 @@
 package com.example.be8arm.domain.member.mypage.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,13 +85,13 @@ public class MypageController {
 
 	// todo Member(작성자) 정보 누락되어 있음. 순환참조 문제. - 24.03.13
 	@GetMapping("/myRecruitment")
-	public ResponseEntity<List<RecruitmentListResponseDto>> mypageMyRecruitment(
+	public ResponseEntity<Page<RecruitmentListResponseDto>> mypageMyRecruitment(
 		@AuthenticationPrincipal UserPrincipal memberPrincipal,
-		@RequestParam(name = "page") Long page) {
-		ResponseEntity<List<RecruitmentListResponseDto>> responseEntity;
+		@RequestParam(name = "page") int page) {
+		ResponseEntity<Page<RecruitmentListResponseDto>> responseEntity;
 		try {
 			Member member = memberService.findByUsername(memberPrincipal.getUsername());
-			List<RecruitmentListResponseDto> recruitmentList = mypageService.findMyRecruitment(member);
+			Page<RecruitmentListResponseDto> recruitmentList = mypageService.findMyRecruitment(member, page);
 			responseEntity = ResponseEntity.ok(recruitmentList);
 		} catch (Exception e) {
 			responseEntity = ResponseEntity.badRequest().build();
