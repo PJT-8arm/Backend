@@ -102,7 +102,6 @@ public class MemberService {
 
 		return new SignUpDto(member);
 	}
-<<<<<<< HEAD
 
 	public boolean pwIsNotNullOrNotBlank(String password) {
 		if (password == null)
@@ -117,6 +116,4 @@ public class MemberService {
 		}
 		return member.get();
 	}
-=======
->>>>>>> 530926f (fix : 충돌해결)
 }
