@@ -4,37 +4,24 @@ import java.time.LocalDateTime;
 
 import com.example.be8arm.domain.member.member.entity.Member;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
+import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
+import com.example.be8arm.domain.recruitment.recruitment.entity.RecruitmentDto;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 public class RecruitmentListResponseDto { // 전체 글 조회 dto
-	private Member member; // todo Member의 정보 중 필요한 정보만 추출 필요. member 그대로 사용 시 순환참조 발생. - 전희영 24.3.13
+	private MemberInfoDto memberInfoDto;
 
-	private String title;
+    private RecruitmentDto recruitmentDto;
 
-	private LocalDateTime recruit_date;
-
-	private String partnerGender;
-
-	private Integer partnerAge;
-
-	private String routine;
-
-	public RecruitmentListResponseDto(Member member, String title, LocalDateTime recruit_date, String partnerGender,
-		Integer partnerAge, String routine) {
-		this.member = member;
-		this.title = title;
-		this.recruit_date = recruit_date;
-		this.partnerGender = partnerGender;
-		this.partnerAge = partnerAge;
-		this.routine = routine;
-	}
+    public RecruitmentListResponseDto(Recruitment recruitment) {
+        this.memberInfoDto = new MemberInfoDto(recruitment.getMember());
+        this.recruitmentDto = new RecruitmentDto(recruitment);
+    }
 }

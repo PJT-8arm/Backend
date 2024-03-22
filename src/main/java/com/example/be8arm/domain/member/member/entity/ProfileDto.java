@@ -1,17 +1,19 @@
-package com.example.be8arm.domain.member.mypage.dto;
+package com.example.be8arm.domain.member.member.entity;
 
-import com.example.be8arm.domain.member.member.entity.Gender;
-import com.example.be8arm.domain.member.member.entity.Profile;
-
+import com.example.be8arm.global.TimeEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfileDto {
-	private Long id;
 
 	private Integer age;
 
@@ -26,7 +28,6 @@ public class ProfileDto {
 	private Integer totalWeight;
 
 	public ProfileDto(Profile profile) {
-		this.id = profile.getId();
 		this.age = profile.getAge();
 		this.gender = profile.getGender();
 		this.benchPress = profile.getBenchPress();
@@ -34,17 +35,4 @@ public class ProfileDto {
 		this.squat = profile.getSquat();
 		this.totalWeight = profile.getTotalWeight();
 	}
-
-	public Profile toEntity() {
-		return Profile.builder()
-			.age(age)
-			.benchPress(benchPress)
-			.deadLift(deadLift)
-			.gender(gender)
-			.squat(squat)
-			.totalWeight(totalWeight)
-			.build();
-	}
-
 }
-

@@ -14,6 +14,12 @@ import com.example.be8arm.global.jwt.JwtAuthenticationFilter;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +28,20 @@ public class SecurityConfig {
 
 	private final JwtTokenProvider jwtTokenProvider;
 	
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+
+		configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+		configuration.setAllowedMethods(List.of("*"));
+		configuration.setAllowedHeaders(List.of("*"));
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
@@ -53,6 +73,7 @@ public class SecurityConfig {
 						.requestMatchers("/members/test").hasRole("USER") // USER 권한이 있어야 요청할 수 있음
 						.anyRequest().authenticated()
 			)
+				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
 			// .formLogin(
 			// 	formLogin -> formLogin
 			// 		.loginPage("/members/login")

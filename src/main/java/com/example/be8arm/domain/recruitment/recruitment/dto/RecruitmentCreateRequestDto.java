@@ -1,5 +1,6 @@
 package com.example.be8arm.domain.recruitment.recruitment.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,13 +14,12 @@ import java.time.LocalTime;
 @ToString
 public class RecruitmentCreateRequestDto {
 
-    private Long id;
-
     private String title;
 
     private String content;
 
-    private LocalDateTime recruit_date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime recruitDate;
 
     private String place;
 
@@ -29,5 +29,6 @@ public class RecruitmentCreateRequestDto {
 
     private String routine;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "Asia/Seoul")
     private LocalTime duration;
 }

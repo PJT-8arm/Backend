@@ -70,7 +70,7 @@ public class NotProde {
 							.place("place" + i)
 							.partnerAge(30)
 							.partnerGender(Gender.Female.getValue())
-							.recruit_date(LocalDateTime.now().plus(Period.ofDays(i)))
+							.recruitDate(LocalDateTime.now().plus(Period.ofDays(i)))
 							.routine("")
 							.build();
 						recruitmentService.addRecruitment(user1, RRqdto);

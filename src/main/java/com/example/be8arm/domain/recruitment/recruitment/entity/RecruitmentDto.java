@@ -1,14 +1,7 @@
 package com.example.be8arm.domain.recruitment.recruitment.entity;
 
-import static lombok.AccessLevel.*;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.global.TimeEntity;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -19,22 +12,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import static lombok.AccessLevel.PROTECTED;
+
+
 @Getter
 @Setter
 @AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
 @SuperBuilder
-public class Recruitment extends TimeEntity {
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "member_id")
-	private Member member;
+public class RecruitmentDto {
+	private Long id;
 
 	private String title;
 
 	private String content;
 
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime recruit_date;
 
 	private String place;
@@ -47,4 +42,16 @@ public class Recruitment extends TimeEntity {
 
 	private LocalTime duration;
 
+
+	public RecruitmentDto(Recruitment recruitment) {
+		this.id = recruitment.getId();
+		this.title = recruitment.getTitle();
+		this.content = recruitment.getContent();
+		this.recruit_date = recruitment.getRecruit_date();
+		this.place = recruitment.getPlace();
+		this.partnerGender = recruitment.getPartnerGender();
+		this.partnerAge = recruitment.getPartnerAge();
+		this.routine = recruitment.getRoutine();
+		this.duration = recruitment.getDuration();
+	}
 }
