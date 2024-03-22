@@ -22,8 +22,9 @@ import lombok.ToString;
 public class ChatMessagesResponse {
 	List<ChatMessagesDto> messages;
 	Boolean hasNext;
+	Long lastId;
 
-	public ChatMessagesResponse(Slice<ChatMessagesDto> chatMessageSlice) {
+	public ChatMessagesResponse(Slice<ChatMessagesDto> chatMessageSlice, Long lastId) {
 		this.messages = chatMessageSlice.getContent();
 		this.hasNext = chatMessageSlice.hasNext();
 	}

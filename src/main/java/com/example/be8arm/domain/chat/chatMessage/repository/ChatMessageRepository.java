@@ -16,7 +16,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
 	Long findLastChatMessageIdInChatRoom(long roomId);
 
 	@Query("""
-		SELECT new com.example.be8arm.domain.chat.chatMessage.dto.ChatMessagesDto(cm.createDate, cm.writerName, cm.content, cm.senderId)
+		SELECT new com.example.be8arm.domain.chat.chatMessage.dto.ChatMessagesDto(cm.id, cm.createDate, cm.writerName, cm.content, cm.senderId)
 		FROM ChatMessage cm WHERE cm.chatRoom.id = :roomId AND cm.id < :lastMessageId
 		ORDER BY cm.id DESC
 		""")

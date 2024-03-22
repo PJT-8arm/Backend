@@ -14,6 +14,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ChatMessagesDto {
+	private Long id;
 
 	private LocalDateTime createDate;
 
@@ -23,7 +24,8 @@ public class ChatMessagesDto {
 
 	private Long senderId;
 
-	public ChatMessagesDto(LocalDateTime createDate, String writerName, String content, Long senderId) {
+	public ChatMessagesDto(Long id, LocalDateTime createDate, String writerName, String content, Long senderId) {
+		this.id = id;
 		this.createDate = createDate;
 		this.writerName = writerName;
 		this.content = content;

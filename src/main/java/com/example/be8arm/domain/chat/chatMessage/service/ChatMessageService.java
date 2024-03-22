@@ -1,5 +1,6 @@
 package com.example.be8arm.domain.chat.chatMessage.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -50,6 +51,7 @@ public class ChatMessageService {
 			.writerName(writerName)
 			.content(content)
 			.senderId(senderId)
+			.createDate(LocalDateTime.now())
 			.build();
 
 		chatMessage = chatMessageRepository.save(chatMessage);
@@ -72,13 +74,17 @@ public class ChatMessageService {
 
 	}
 
-	public Slice<ChatMessagesDto> findMessagesBeforeId(long roomId, Long lastMessageId, int size) {
-		Pageable pageable = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "id"));
+	public Slice<ChatMessagesDto> findMessagesBeforeId(long roomId, Long lastMessageId, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 		return chatMessageRepository.findByChatRoomIdAndIdLessThanOrderByIdDesc(roomId, lastMessageId, pageable);
 	}
 
 	public Long findLastChatMessageIdInChatRoom(long roomId) {
-		return chatMessageRepository.findLastChatMessageIdInChatRoom(roomId);
+		Long lastMessageId = chatMessageRepository.findLastChatMessageIdInChatRoom(roomId);
+		if (lastMessageId == null)
+			return 0L;
+
+		return lastMessageId;
 	}
 
 	// public long countMessageUnReaded(long memberId) {

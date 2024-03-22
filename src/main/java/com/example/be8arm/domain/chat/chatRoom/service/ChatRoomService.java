@@ -1,6 +1,5 @@
 package com.example.be8arm.domain.chat.chatRoom.service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomDetailDto;
-import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoom;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMemberId;
@@ -28,16 +26,6 @@ public class ChatRoomService {
 	private final ChatRoomRepository chatRoomRepository;
 	private final ChatRoomMemberRepository chatRoomMemberRepository;
 	private final MemberRepository memberRepository;
-
-	public List<ChatRoomListDto> findByMemberId(Long memberId) {
-		List<Object[]> results = chatRoomRepository.findChatRoomsAndLatestMessageByMemberId(memberId);
-		List<ChatRoomListDto> chatRooms = new ArrayList<>();
-
-		for (Object[] result : results) {
-			chatRooms.add(new ChatRoomListDto(result));
-		}
-		return chatRooms;
-	}
 
 	public List<ChatRoomDetailDto> showChatRoomList(Long memberId) {
 		return chatRoomRepository.findChatRoomDetailsByMemberId(memberId);
