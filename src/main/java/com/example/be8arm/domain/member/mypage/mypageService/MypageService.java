@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -60,14 +59,13 @@ public class MypageService {
 	}
 
 	public Page<RecruitmentListResponseDto> findMyRecruitment(Member member, int page) {
-		List<RecruitmentListResponseDto> list = recruitmentService.findMyRecruitmentList(member);
 
 		//pagination
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.asc("createDate"));
-		int pagesize = 10;
+		int pagesize = 5;
 		Pageable pageable = PageRequest.of(page, pagesize, Sort.by(sorts));
 
-		return new PageImpl<>(list, pageable, list.size());
+		return recruitmentService.findMyRecruitmentList(member, pageable);
 	}
 }
