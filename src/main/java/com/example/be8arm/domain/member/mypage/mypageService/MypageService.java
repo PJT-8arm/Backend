@@ -62,8 +62,8 @@ public class MypageService {
 
 		//pagination
 		List<Sort.Order> sorts = new ArrayList<>();
-		sorts.add(Sort.Order.asc("createDate"));
-		int pagesize = 5;
+		sorts.add(Sort.Order.desc("createDate")); // 내림차순 정렬(최근순)
+		int pagesize = 5; // 모바일 화면기준이므로 5개씩
 		Pageable pageable = PageRequest.of(page, pagesize, Sort.by(sorts));
 
 		return recruitmentService.findMyRecruitmentList(member, pageable);

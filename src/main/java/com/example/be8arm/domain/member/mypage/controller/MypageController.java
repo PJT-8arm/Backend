@@ -83,7 +83,6 @@ public class MypageController {
 		return responseEntity;
 	}
 
-	// todo Member(작성자) 정보 누락되어 있음. 순환참조 문제. - 24.03.13
 	@GetMapping("/myRecruitment")
 	public ResponseEntity<Page<RecruitmentListResponseDto>> mypageMyRecruitment(
 		@AuthenticationPrincipal UserPrincipal memberPrincipal,
@@ -91,6 +90,7 @@ public class MypageController {
 		ResponseEntity<Page<RecruitmentListResponseDto>> responseEntity;
 		try {
 			Member member = memberService.findByUsername(memberPrincipal.getUsername());
+			// page 적용
 			Page<RecruitmentListResponseDto> recruitmentList = mypageService.findMyRecruitment(member, page);
 			responseEntity = ResponseEntity.ok(recruitmentList);
 		} catch (Exception e) {
