@@ -20,8 +20,14 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Application extends TimeEntity {
 	@ManyToOne
-	@JoinColumn(name = "member_Id", nullable = false)
-	private Member member;
+	@JoinColumn(name = "writer_Id", nullable = false)
+	private Member writer;
+
+	@ManyToOne
+	@JoinColumn(name = "partner_Id")
+	private Member partner;
+
+	private boolean isCanceled;
 
 	@Column(nullable = false)
 	private String status;
