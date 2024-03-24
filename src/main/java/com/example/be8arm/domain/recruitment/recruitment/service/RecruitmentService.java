@@ -4,18 +4,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
-import com.example.be8arm.domain.recruitment.recruitment.entity.RecruitmentDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateRequestDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentCreateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDetailResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentUpdateResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
+import com.example.be8arm.domain.recruitment.recruitment.entity.RecruitmentDto;
 import com.example.be8arm.domain.recruitment.recruitment.repository.RecruitmentRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -52,13 +55,13 @@ public class RecruitmentService {
 		return new RecruitmentCreateResponseDto(recruitment);
 	}
 
-    public List<RecruitmentListResponseDto> findRecruitmentList() {
-        List<RecruitmentListResponseDto> recruitments = recruitmentRepository.findAll()
-                .stream()
-                .map(RecruitmentListResponseDto::new)
-                .toList();
-        return recruitments;
-    }
+	public List<RecruitmentListResponseDto> findRecruitmentList() {
+		List<RecruitmentListResponseDto> recruitments = recruitmentRepository.findAll()
+			.stream()
+			.map(RecruitmentListResponseDto::new)
+			.toList();
+		return recruitments;
+	}
 
 	public RecruitmentListDetailResponseDto findRecruitment(Long id) {
 		Recruitment recruitment = recruitmentRepository.findById(id)
@@ -97,14 +100,16 @@ public class RecruitmentService {
 		recruitmentRepository.delete(existingRecruitment);
 	}
 
-	public List<RecruitmentListResponseDto> findMyRecruitmentList(Member member) {
-		List<Recruitment> recruitments = recruitmentRepository.findAllByMember(member);
+	public Page<RecruitmentListResponseDto> findMyRecruitmentList(Member member, Pageable pageable) {
+		Page<Recruitment> recruitments = recruitmentRepository.findAllByMember(member, pageable);
 
-		return recruitments.stream()
-				.map(recruitment -> new RecruitmentListResponseDto(
-						new MemberInfoDto(recruitment.getMember()), // MemberInfoDto 생성자에 필요한 파라미터를 전달
-						new RecruitmentDto(recruitment) // RecruitmentDto 생성자에 필요한 파라미터를 전달
-				))
-				.collect(Collectors.toList());
+		List<RecruitmentListResponseDto> data = recruitments.stream()
+			.map(recruitment -> new RecruitmentListResponseDto(
+				new MemberInfoDto(recruitment.getMember()), // MemberInfoDto 생성자에 필요한 파라미터를 전달
+				new RecruitmentDto(recruitment) // RecruitmentDto 생성자에 필요한 파라미터를 전달
+			))
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(data, pageable, recruitments.getTotalElements());
 	}
 }

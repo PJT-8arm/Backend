@@ -1,13 +1,13 @@
 package com.example.be8arm.domain.member.mypage.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.member.member.dto.MemberDto;
@@ -83,14 +83,15 @@ public class MypageController {
 		return responseEntity;
 	}
 
-	// todo Member(작성자) 정보 누락되어 있음. 순환참조 문제. - 24.03.13
 	@GetMapping("/myRecruitment")
-	public ResponseEntity<List<RecruitmentListResponseDto>> mypageMyRecruitment(
-		@AuthenticationPrincipal UserPrincipal memberPrincipal) {
-		ResponseEntity<List<RecruitmentListResponseDto>> responseEntity;
+	public ResponseEntity<Page<RecruitmentListResponseDto>> mypageMyRecruitment(
+		@AuthenticationPrincipal UserPrincipal memberPrincipal,
+		@RequestParam(name = "page") int page) {
+		ResponseEntity<Page<RecruitmentListResponseDto>> responseEntity;
 		try {
 			Member member = memberService.findByUsername(memberPrincipal.getUsername());
-			List<RecruitmentListResponseDto> recruitmentList = mypageService.findMyRecruitment(member);
+			// page 적용
+			Page<RecruitmentListResponseDto> recruitmentList = mypageService.findMyRecruitment(member, page);
 			responseEntity = ResponseEntity.ok(recruitmentList);
 		} catch (Exception e) {
 			responseEntity = ResponseEntity.badRequest().build();
