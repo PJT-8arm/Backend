@@ -59,7 +59,7 @@ jobs:
         env:
           ACTIONS_STEP_DEBUG: true
           APPLICATION_SECRET: ${{secrets.APPLICATION_JWT_YML}}
-        run: echo "$APPLICATION_JWT" >> src/main/resources/application-jwt.yml
+        run: echo "$APPLICATION_JWTTK" >> src/main/resources/application-jwtTK.yml
       - name: 빌드앤 푸쉬
         uses: docker/build-push-action@v3
         with:
