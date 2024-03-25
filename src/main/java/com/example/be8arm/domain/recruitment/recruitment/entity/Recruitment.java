@@ -7,8 +7,8 @@ import java.time.LocalTime;
 
 import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.global.TimeEntity;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
