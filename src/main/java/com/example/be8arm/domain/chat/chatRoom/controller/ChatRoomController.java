@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,6 +67,18 @@ public class ChatRoomController {
 		ChatRoomInfoDto chatRoomInfoDto = new ChatRoomInfoDto(chatRoomMember);
 
 		return ResponseEntity.ok(chatRoomInfoDto);
+	}
+
+	@PutMapping("/{roomId}/updateId")
+	@Operation(summary = "마지막으로 읽은 메세지 최신화")
+	public ResponseEntity<?> setLastViewId(@PathVariable final long roomId,
+		@RequestParam(value = "lastId", required = false) Long lastMessageId) {
+		if (lastMessageId == null) {
+			chatRoomService.setLastViewMessageIdToLastIdByRoomId(roomId);
+		} else {
+			chatRoomService.setLastViewMessageIdToCurrentIdByRoomId(roomId, lastMessageId);
+		}
+		return ResponseEntity.ok("성공");
 	}
 
 	@GetMapping("/{roomId}/messages")
@@ -125,7 +138,7 @@ public class ChatRoomController {
 		} else {
 			chatRoomId = chatRoomService.findChatRoom(myMember.getId(), theirMember.getId());
 		}
-		
+
 		return ResponseEntity.ok(chatRoomId);
 	}
 

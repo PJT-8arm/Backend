@@ -127,4 +127,12 @@ public class ChatRoomService {
 		Optional<ChatRoom> chatRoomOptional = findById(roomId);
 		return chatRoomOptional.isPresent();
 	}
+
+	public void setLastViewMessageIdToLastIdByRoomId(Long roomId) {
+		chatRoomMemberRepository.updateLastViewMessageIdWhenEnterRoom(roomId);
+	}
+
+	public void setLastViewMessageIdToCurrentIdByRoomId(long roomId, Long lastMessageId) {
+		chatRoomMemberRepository.setLastViewMessageIdToCurrentIdByRoomId(roomId, lastMessageId);
+	}
 }

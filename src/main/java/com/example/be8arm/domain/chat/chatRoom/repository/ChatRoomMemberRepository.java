@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 
@@ -26,4 +28,15 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
 	Optional<ChatRoomMember> findByChatRoomIdAndMemberId(long chatRoomId, long memberId);
 
 	Long countByChatRoomId(Long chatRoomId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE ChatRoomMember crm SET crm.lastViewMessageId = (SELECT MAX(cm.id) FROM ChatMessage cm WHERE cm.chatRoom.id = :chatRoomId) WHERE crm.chatRoom.id = :chatRoomId")
+	void updateLastViewMessageIdWhenEnterRoom(Long chatRoomId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE ChatRoomMember crm SET crm.lastViewMessageId = :lastMessageId WHERE crm.id.chatRoomId = :roomId")
+	void setLastViewMessageIdToCurrentIdByRoomId(long roomId, Long lastMessageId);
 }
+
