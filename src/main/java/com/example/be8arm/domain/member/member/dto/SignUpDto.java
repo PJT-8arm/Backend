@@ -39,6 +39,7 @@ public class SignUpDto {
 	private String name;
 	private String imgUrl;
 	private String address;
+    @Builder.Default
 	private List<String> roles = new ArrayList<>();
 
 	public Member toEntity(String encodedPassword, List<String> roles) {
