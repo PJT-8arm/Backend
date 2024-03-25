@@ -16,13 +16,15 @@ public class MemberInfoDto {
 
 	private String nickname;
 
+	private String address;
+
 	private String imgUrl; // 프로필 사진
 
 	public MemberInfoDto(Member member) {
 		this.name = member.getName();
 		this.imgUrl = member.getImgUrl();
 		this.nickname = member.getNickname();
-
+		this.address = member.getAddress();
 	}
 
 }
