@@ -25,6 +25,7 @@ public class MemberDto {
 	private String name;
 	private String imgUrl;
 	private ProfileDto profile;
+	@Builder.Default
 	private List<String> roles = new ArrayList<>();
 
 	static public MemberDto toDto(Member member) {
