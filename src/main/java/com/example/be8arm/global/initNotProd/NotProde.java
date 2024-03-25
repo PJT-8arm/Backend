@@ -41,7 +41,7 @@ public class NotProde {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
 				if (chatRoomService.countChatRoom() == 0) {
-					for (int i = 0; i < 4; i++) {
+					for (int i = 0; i < 10; i++) {
 						SignUpDto signUpDto = SignUpDto.builder()
 							.username("user" + i)
 							.password("1234")
@@ -61,7 +61,7 @@ public class NotProde {
 					Member user2 = memberService.findByUsername("user2");
 					Member user3 = memberService.findByUsername("user3");
 					Member[] users = {user0, user1, user2, user3};
-					
+
 					for (int i = 0; i < 10; i++) {
 						RecruitmentCreateRequestDto RRqdto = RecruitmentCreateRequestDto.builder()
 							.content("content" + i)
