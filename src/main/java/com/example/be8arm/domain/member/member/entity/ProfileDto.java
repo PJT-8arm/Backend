@@ -1,10 +1,6 @@
 package com.example.be8arm.domain.member.member.entity;
 
-import com.example.be8arm.global.TimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
