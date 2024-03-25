@@ -1,0 +1,33 @@
+server:
+  port: 8080
+spring:
+  config:
+    activate:
+      on-profile: dev
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:h2:./db_dev;MODE=MYSQL;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+      show-sql: true
+      default_batch_fetch_size: 100
+      format_sql: true
+      highlight_sql: true
+      use_sql_comments: true
+
+jwt:
+  secret: ${jwt.secret}
+
+custom:
+  site:
+    name: armapp
+    baseUrl: "http://localhost:${server.port}"
