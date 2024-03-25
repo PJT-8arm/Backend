@@ -1,5 +1,7 @@
 package com.example.be8arm.global.config.security;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,17 +11,14 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.be8arm.global.jwt.JwtAuthenticationFilter;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
-import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +26,7 @@ import java.util.Set;
 public class SecurityConfig {
 
 	private final JwtTokenProvider jwtTokenProvider;
-	
+
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
@@ -73,7 +72,8 @@ public class SecurityConfig {
 						.requestMatchers("/members/test").hasRole("USER") // USER 권한이 있어야 요청할 수 있음
 						.anyRequest().authenticated()
 			)
-				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
+			.cors(
+				httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
 			// .formLogin(
 			// 	formLogin -> formLogin
 			// 		.loginPage("/members/login")
