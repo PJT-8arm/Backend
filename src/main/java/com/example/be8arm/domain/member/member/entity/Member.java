@@ -80,6 +80,9 @@ public class Member extends TimeEntity {
 		if (this.imgUrl == null || (dto.getImgUrl() != null && !this.imgUrl.equals(dto.getImgUrl()))) {
 			this.imgUrl = dto.getImgUrl();
 		}
+		if (this.address == null || (dto.getAddress() != null && !this.address.equals(dto.getAddress()))) {
+			this.address = dto.getAddress();
+		}
 	}
 
 }
