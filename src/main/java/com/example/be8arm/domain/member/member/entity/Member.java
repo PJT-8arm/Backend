@@ -41,6 +41,8 @@ public class Member extends TimeEntity {
 
 	private String imgUrl; // 프로필 사진
 
+	private String address;
+
 	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
 	private Profile profile;
 
@@ -48,12 +50,13 @@ public class Member extends TimeEntity {
 	@Builder.Default
 	private List<String> roles = new ArrayList<>();
 
-	public Member(String username, String name, String imgUrl, String nickname, Profile profile) {
+	public Member(String username, String name, String imgUrl, String nickname, Profile profile, String address) {
 		this.username = username;
 		this.name = name;
 		this.imgUrl = imgUrl;
 		this.nickname = nickname;
 		this.profile = profile;
+		this.address = address;
 	}
 
 	public boolean notHasProfile() {

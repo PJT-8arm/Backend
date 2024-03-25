@@ -38,6 +38,7 @@ public class SignUpDto {
 	private String nickname;
 	private String name;
 	private String imgUrl;
+	private String address;
 	private List<String> roles = new ArrayList<>();
 
 	public Member toEntity(String encodedPassword, List<String> roles) {
@@ -47,6 +48,7 @@ public class SignUpDto {
 			.nickname(nickname)
 			.name(name)
 			.imgUrl(imgUrl)
+				.address(address)
 			.roles(roles)
 			.build();
 	}
@@ -56,5 +58,6 @@ public class SignUpDto {
 		this.nickname = member.getNickname();
 		this.name = member.getName();
 		this.imgUrl = member.getImgUrl();
+		this.address = member.getAddress();
 	}
 }
