@@ -1,22 +1,15 @@
 package com.example.be8arm.domain.recruitment.recruitment.entity;
 
-import com.example.be8arm.domain.member.member.entity.Member;
-import com.example.be8arm.global.TimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import static lombok.AccessLevel.*;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
-import static lombok.AccessLevel.PROTECTED;
-
 
 @Getter
 @Setter
@@ -41,7 +34,6 @@ public class RecruitmentDto {
 	private String routine;
 
 	private LocalTime duration;
-
 
 	public RecruitmentDto(Recruitment recruitment) {
 		this.id = recruitment.getId();

@@ -1,9 +1,14 @@
 package com.example.be8arm.domain.recruitment.recruitment.dto;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

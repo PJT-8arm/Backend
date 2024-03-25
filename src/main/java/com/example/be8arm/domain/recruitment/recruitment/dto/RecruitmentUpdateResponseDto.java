@@ -1,11 +1,17 @@
 package com.example.be8arm.domain.recruitment.recruitment.dto;
 
-import com.example.be8arm.domain.member.member.entity.Member;
-import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
+import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
