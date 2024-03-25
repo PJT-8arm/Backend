@@ -19,6 +19,7 @@ RUN ./gradlew dependencies --no-daemon
 
 # 소스 코드 복사
 COPY src src
+COPY naver-checkstyle-rules.xml .
 
 # 애플리케이션 빌드 테스트 제외
 RUN ./gradlew build --no-daemon --exclude-task test

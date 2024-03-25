@@ -71,7 +71,7 @@ public class ChatRoomController {
 
 	@PutMapping("/{roomId}/updateId")
 	@Operation(summary = "마지막으로 읽은 메세지 최신화")
-	public ResponseEntity<?> setLastViewId(@PathVariable final long roomId,
+	public ResponseEntity<?> updateLastViewId(@PathVariable final long roomId,
 		@RequestParam(value = "lastId", required = false) Long lastMessageId) {
 		if (lastMessageId == null) {
 			chatRoomService.setLastViewMessageIdToLastIdByRoomId(roomId);
