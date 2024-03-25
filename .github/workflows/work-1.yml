@@ -55,10 +55,10 @@ jobs:
           ACTIONS_STEP_DEBUG: true
           APPLICATION_SECRET: ${{secrets.APPLICATION_SECRET}}
         run: echo "$APPLICATION_SECRET" >> src/main/resources/application-secret.yml
-      - name: application-jwt.yml 생성
+      - name: application-jwtTK.yml 생성
         env:
           ACTIONS_STEP_DEBUG: true
-          APPLICATION_SECRET: ${{secrets.APPLICATION_JWTTK}}
+          APPLICATION_JWTTK: ${{secrets.APPLICATION_JWTTK}}
         run: echo "$APPLICATION_JWTTK" >> src/main/resources/application-jwtTK.yml
       - name: 빌드앤 푸쉬
         uses: docker/build-push-action@v3
