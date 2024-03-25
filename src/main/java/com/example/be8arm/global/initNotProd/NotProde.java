@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
 import com.example.be8arm.domain.chat.chatRoom.service.ChatRoomService;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.entity.Gender;
@@ -31,6 +32,7 @@ public class NotProde {
 	private final RecruitmentService recruitmentService;
 	private final MypageService mypageService;
 	private final ChatRoomService chatRoomService;
+	private final ChatMessageService chatMessageService;
 
 	@Bean
 	public ApplicationRunner devInit() {
@@ -46,6 +48,7 @@ public class NotProde {
 							.checkPassword("1234")
 							.nickname("hihi" + i)
 							.name("user" + i)
+							.imgUrl("https://avatars.githubusercontent.com/u/109726278?s=70&v=4")
 							.build();
 						try {
 							memberService.signUp(signUpDto);
@@ -57,6 +60,8 @@ public class NotProde {
 					Member user1 = memberService.findByUsername("user1");
 					Member user2 = memberService.findByUsername("user2");
 					Member user3 = memberService.findByUsername("user3");
+					Member[] users = {user0, user1, user2, user3};
+					
 					for (int i = 0; i < 10; i++) {
 						RecruitmentCreateRequestDto RRqdto = RecruitmentCreateRequestDto.builder()
 							.content("content" + i)
@@ -71,10 +76,20 @@ public class NotProde {
 						recruitmentService.addRecruitment(user1, RRqdto);
 					}
 
-					chatRoomService.makeChatRoom(user0, user1);
-					chatRoomService.makeChatRoom(user0, user2);
-					chatRoomService.makeChatRoom(user0, user3);
+					for (int i = 1; i < 4; i++) {
+						Long chatRoomId = chatRoomService.makeChatRoom(user0, users[i]);
+						chatMessageService.writeAndSend(chatRoomId, users[i].getName(), "생성", "created",
+							users[i].getId());
+					}
+
+					for (int i = 0; i < 80; i += 2) {
+						chatMessageService.writeAndSend(1, "user0", "메세지" + i, "created",
+							1);
+						chatMessageService.writeAndSend(1, "user1", "메세지" + (i + 1), "created",
+							2);
+					}
 				}
+
 			}
 		};
 	}

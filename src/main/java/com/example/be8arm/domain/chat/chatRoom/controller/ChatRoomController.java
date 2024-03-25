@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be8arm.domain.chat.chatMessage.dto.ChatMessagesDto;
-import com.example.be8arm.domain.chat.chatMessage.entity.ChatMessage;
 import com.example.be8arm.domain.chat.chatMessage.service.ChatMessageService;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.ModifyRequestBody;
 import com.example.be8arm.domain.chat.chatRoom.controller.request.WriteRequestBody;
+import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomDetailDto;
 import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomInfoDto;
-import com.example.be8arm.domain.chat.chatRoom.dto.ChatRoomListDto;
 import com.example.be8arm.domain.chat.chatRoom.entity.ChatRoomMember;
 import com.example.be8arm.domain.chat.chatRoom.service.ChatRoomService;
 import com.example.be8arm.domain.member.member.entity.Member;
@@ -69,33 +69,43 @@ public class ChatRoomController {
 		return ResponseEntity.ok(chatRoomInfoDto);
 	}
 
+	@PutMapping("/{roomId}/updateId")
+	@Operation(summary = "마지막으로 읽은 메세지 최신화")
+	public ResponseEntity<?> setLastViewId(@PathVariable final long roomId,
+		@RequestParam(value = "lastId", required = false) Long lastMessageId) {
+		if (lastMessageId == null) {
+			chatRoomService.setLastViewMessageIdToLastIdByRoomId(roomId);
+		} else {
+			chatRoomService.setLastViewMessageIdToCurrentIdByRoomId(roomId, lastMessageId);
+		}
+		return ResponseEntity.ok("성공");
+	}
+
 	@GetMapping("/{roomId}/messages")
-	@Operation(summary = "채팅방 정보 조회")
+	@Operation(summary = "채팅방 메세지 30개씩 반환")
 	@ApiResponse(responseCode = "200", description = "채팅메세지 반환", content = {
 		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatMessagesDto.class))})
 	public ResponseEntity<?> showMessages(@PathVariable long roomId,
 		@RequestParam(value = "lastId", required = false) Long lastMessageId,
+		@RequestParam(value = "page", defaultValue = "0") int page,
 		@RequestParam(value = "size", defaultValue = "30") int size) {
 
 		if (lastMessageId == null) {
 			lastMessageId = chatMessageService.findLastChatMessageIdInChatRoom(roomId) + 1L;
 		}
 
-		Slice<ChatMessage> messageSlice = chatMessageService.findMessagesBeforeId(roomId, lastMessageId, size);
+		Slice<ChatMessagesDto> messageSlice = chatMessageService.findMessagesBeforeId(roomId, lastMessageId, 0,
+			size);
 
-		ChatMessagesDto chatMessagesDto = new ChatMessagesDto(messageSlice);
-
-		return ResponseEntity.ok(chatMessagesDto);
+		return ResponseEntity.ok(messageSlice);
 	}
 
 	@GetMapping("/list")
 	@Operation(summary = "채팅방 목록 조회")
 	@ApiResponse(responseCode = "200", description = "채팅방 목록 반환", content = {
-		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatRoomListDto.class))})
-	public ResponseEntity<?> showList(@AuthenticationPrincipal UserPrincipal user) {
-		//TODO 무한스크롤 구현
-		List<ChatRoomListDto> chatRooms = chatRoomService.findByMemberId(user.getMember().getId());
-		//List<ChatRoomDetailDto> chatRooms = chatRoomService.showChatRoomList(user.getMember().getId()); TODO 작동하는거 확인하고 수정
+		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatRoomDetailDto.class))})
+	public ResponseEntity<?> showList2(@AuthenticationPrincipal UserPrincipal user) {
+		List<ChatRoomDetailDto> chatRooms = chatRoomService.showChatRoomList(user.getMember().getId());
 		return ResponseEntity.ok(chatRooms);
 	}
 
@@ -114,7 +124,7 @@ public class ChatRoomController {
 	@GetMapping("/make/{theirName}")
 	@Operation(summary = "채팅방 생성")
 	@ApiResponse(responseCode = "200", description = "채팅방 정보 반환", content = {
-		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatRoomInfoDto.class))})
+		@Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))})
 	public ResponseEntity<?> makeChatRoom(@AuthenticationPrincipal UserPrincipal user, @PathVariable String theirName //
 	) {
 		Member myMember = user.getMember();
@@ -123,18 +133,13 @@ public class ChatRoomController {
 		Long chatRoomId;
 		//이미 존재 하는 방일 때 0보다 큰값이 return됨
 		if ((chatRoomId = chatRoomService.findChatRoom(myMember.getId(), theirMember.getId())) <= 0) {
-			chatRoomId = chatRoomService.makeChatRoom(user.getMember(), theirMember);
+			chatRoomId = chatRoomService.makeChatRoom(myMember, theirMember);
 			chatMessageService.writeAndSend(chatRoomId, myMember.getName(), "생성", "created", myMember.getId());
 		} else {
 			chatRoomId = chatRoomService.findChatRoom(myMember.getId(), theirMember.getId());
 		}
 
-		ChatRoomMember chatRoomMember = chatRoomService.findChatRoomMemberByChatRoomIdAndMemberId(myMember.getId(),
-			chatRoomId);
-		ChatRoomInfoDto chatRoomInfoDto = new ChatRoomInfoDto(chatRoomMember);
-
-		return ResponseEntity.ok(chatRoomInfoDto);
-
+		return ResponseEntity.ok(chatRoomId);
 	}
 
 	@DeleteMapping("/exit/{chatRoomId}")

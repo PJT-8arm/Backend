@@ -20,10 +20,10 @@ public class ChatRoomDetailDto {
 	private String lastMessageContent;
 	private String lastMessageSender;
 	private LocalDateTime lastMessageDate;
-	private int unreadMessagesCount;
+	private Long unreadMessagesCount;
 
 	public ChatRoomDetailDto(Long chatRoomId, String chatRoomName, String imgUrl, String lastMessageContent,
-		String lastMessageSender, LocalDateTime lastMessageDate, int unreadMessagesCount) {
+		String lastMessageSender, LocalDateTime lastMessageDate, Long unreadMessagesCount) {
 		this.chatRoomId = chatRoomId;
 		this.chatRoomName = chatRoomName;
 		this.imgUrl = imgUrl;
