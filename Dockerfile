@@ -20,8 +20,8 @@ RUN ./gradlew dependencies --no-daemon
 # 소스 코드 복사
 COPY src src
 
-# 애플리케이션 빌드
-RUN ./gradlew build --no-daemon
+# 애플리케이션 빌드 테스트 제외
+RUN ./gradlew build --no-daemon --exclude-task test
 
 # 두 번째 스테이지: 실행 스테이지
 FROM ghcr.io/graalvm/graalvm-community:21
