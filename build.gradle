@@ -48,6 +48,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
+
+    //ncp object storage aws s3호환
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.11.238'
 }
 
 tasks.named('test') {

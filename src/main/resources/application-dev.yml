@@ -23,6 +23,11 @@ spring:
       format_sql: true
       highlight_sql: true
       use_sql_comments: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 jwt:
   secret: ${jwt.secret}

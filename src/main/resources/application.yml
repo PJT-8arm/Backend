@@ -4,6 +4,7 @@ spring:
       dev:
         - dev
         - jwt
+        - secret
       prod:
         - prod
         - jwt
