@@ -48,6 +48,14 @@ public class ApplicationService {
 			.writer(writer)
 			.partner(partner)
 			.status(requestDto.getStatus())
+			.title(requestDto.getTitle())
+			.content(requestDto.getContent())
+			.recruit_date(requestDto.getRecruit_date())
+			.place(requestDto.getPlace())
+			.partnerGender(requestDto.getPartnerGender())
+			.partnerAge(requestDto.getPartnerAge())
+			.routine(requestDto.getRoutine())
+			.duration(requestDto.getDuration())
 			.build();
 
 		// 생성된 신청서를 저장합니다.
