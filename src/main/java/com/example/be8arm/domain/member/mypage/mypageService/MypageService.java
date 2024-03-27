@@ -28,6 +28,7 @@ public class MypageService {
 	private final ProfileRepository profileRepository;
 	private final RecruitmentService recruitmentService;
 
+	@Transactional
 	public ProfileDto getProfile(String username) {
 		Member member = memberService.findByUsername(username);
 		Profile profile;
