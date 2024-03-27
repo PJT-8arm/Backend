@@ -82,7 +82,7 @@ public class ApplicationService {
 			.map(ApplicationListResponseDto::new)
 			.collect(Collectors.toList());
 	}
-
+  
 	public Page<ApplicationListDto> findApplicationByMember(Member writer, Pageable pageable) {
 		Page<Application> list = applicationRepository.findByWriter(writer, pageable);
 
