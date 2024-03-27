@@ -28,3 +28,5 @@ custom:
   site:
     name: armapp
     baseUrl: "http://localhost:${server.port}"
+  front:
+    baseUrl: "http://localhost:3000"
