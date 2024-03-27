@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ChatRoomMemberInfoDto {
-	Long id;
-	String name;
-	String imgUrl;
+	private Long id;
+	private String name;
+	private String imgUrl;
 }
