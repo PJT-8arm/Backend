@@ -27,8 +27,8 @@ public class ApplicationController {
 	@Operation(summary = "약속 생성")
 	@PostMapping("/create")
 	public ResponseEntity<ApplicationCreateResponseDto> createApplication(
-		@AuthenticationPrincipal UserPrincipal user, // 인증된 회원 정보를 받아옴
-		@RequestBody ApplicationCreateRequestDto requestDto) {
+			@AuthenticationPrincipal UserPrincipal user, // 인증된 회원 정보를 받아옴
+			@RequestBody ApplicationCreateRequestDto requestDto) {
 		ApplicationCreateResponseDto responseDto = applicationService.createApplication(user.getMember(), user.getUsername(), requestDto);
 		return ResponseEntity.ok(responseDto);
 	}

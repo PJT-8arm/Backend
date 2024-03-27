@@ -15,6 +15,8 @@ import com.example.be8arm.domain.member.member.entity.Profile;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import com.example.be8arm.domain.member.mypage.repository.ProfileRepository;
+import com.example.be8arm.domain.recruitment.application.dto.ApplicationListDto;
+import com.example.be8arm.domain.recruitment.application.service.ApplicationService;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
 import com.example.be8arm.domain.recruitment.recruitment.service.RecruitmentService;
 
@@ -27,7 +29,9 @@ public class MypageService {
 	private final MemberService memberService;
 	private final ProfileRepository profileRepository;
 	private final RecruitmentService recruitmentService;
+	private final ApplicationService applicationService;
 
+	@Transactional
 	public ProfileDto getProfile(String username) {
 		Member member = memberService.findByUsername(username);
 		Profile profile;
@@ -67,5 +71,16 @@ public class MypageService {
 		Pageable pageable = PageRequest.of(page, pagesize, Sort.by(sorts));
 
 		return recruitmentService.findMyRecruitmentList(member, pageable);
+	}
+
+	public Page<ApplicationListDto> findMyApplication(Member member, int page) {
+		//pagination
+		List<Sort.Order> sorts = new ArrayList<>();
+		sorts.add(Sort.Order.desc("createDate")); // 내림차순 정렬(최근순)
+		int pagesize = 5; // 모바일 화면기준이므로 5개씩
+		Pageable pageable = PageRequest.of(page, pagesize, Sort.by(sorts));
+
+		return applicationService.findApplicationByMember(member, pageable);
+
 	}
 }

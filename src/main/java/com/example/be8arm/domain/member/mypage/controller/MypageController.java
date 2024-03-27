@@ -17,6 +17,7 @@ import com.example.be8arm.domain.member.member.entity.Member;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import com.example.be8arm.domain.member.mypage.mypageService.MypageService;
+import com.example.be8arm.domain.recruitment.application.dto.ApplicationListDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
 import com.example.be8arm.global.security.UserPrincipal;
 
@@ -99,5 +100,15 @@ public class MypageController {
 		return responseEntity;
 	}
 
-	// todo GET 내 약속 조회 모집글 데이터 - 24.03.11
+	@GetMapping("/myApplication")
+	public ResponseEntity<Page<ApplicationListDto>> mypageMyApplication(
+		@AuthenticationPrincipal UserPrincipal memberPrincipal,
+		@RequestParam(name = "page") int page) {
+		ResponseEntity<Page<ApplicationListDto>> responseEntity;
+		Member member = memberService.findByUsername(memberPrincipal.getUsername());
+		// page 적용
+		Page<ApplicationListDto> applicationList = mypageService.findMyApplication(member, page);
+		responseEntity = ResponseEntity.ok(applicationList);
+		return responseEntity;
+	}
 }

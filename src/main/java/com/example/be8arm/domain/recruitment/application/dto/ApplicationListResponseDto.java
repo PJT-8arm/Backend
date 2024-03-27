@@ -7,6 +7,8 @@ import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
 import com.example.be8arm.domain.recruitment.application.entity.Application;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.example.be8arm.domain.member.member.entity.MemberInfoDto;
+import com.example.be8arm.domain.recruitment.application.entity.Application;
 import lombok.*;
 
 @Getter

@@ -23,11 +23,15 @@ spring:
       format_sql: true
       highlight_sql: true
       use_sql_comments: true
-
-jwt:
-  secret: ${jwt.secret}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 custom:
   site:
     name: armapp
     baseUrl: "http://localhost:${server.port}"
+  front:
+    baseUrl: "http://localhost:3000"
