@@ -1,21 +1,26 @@
 package com.example.be8arm.domain.recruitment.application.service;
 
-import com.example.be8arm.domain.member.member.entity.Member;
-import com.example.be8arm.domain.member.member.repository.MemberRepository;
-import com.example.be8arm.domain.recruitment.application.dto.*;
-import com.example.be8arm.domain.recruitment.application.entity.Application;
-import com.example.be8arm.domain.recruitment.application.repository.ApplicationRepository;
-import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDetailResponseDto;
-import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.repository.MemberRepository;
+import com.example.be8arm.domain.recruitment.application.dto.ApplicationCreateRequestDto;
+import com.example.be8arm.domain.recruitment.application.dto.ApplicationCreateResponseDto;
+import com.example.be8arm.domain.recruitment.application.dto.ApplicationListDto;
+import com.example.be8arm.domain.recruitment.application.dto.ApplicationListResponseDto;
+import com.example.be8arm.domain.recruitment.application.entity.Application;
+import com.example.be8arm.domain.recruitment.application.repository.ApplicationRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +32,8 @@ public class ApplicationService {
 	private final ApplicationRepository applicationRepository;
 
 	@Transactional
-	public ApplicationCreateResponseDto createApplication(Member member, String username, ApplicationCreateRequestDto requestDto) {
+	public ApplicationCreateResponseDto createApplication(Member member, String username,
+		ApplicationCreateRequestDto requestDto) {
 
 		Member writer = null;
 		if (requestDto.getWriterId() != null) {
@@ -75,5 +81,15 @@ public class ApplicationService {
 		return applications.stream()
 			.map(ApplicationListResponseDto::new)
 			.collect(Collectors.toList());
+	}
+
+	public Page<ApplicationListDto> findApplicationByMember(Member writer, Pageable pageable) {
+		Page<Application> list = applicationRepository.findByWriter(writer, pageable);
+
+		List<ApplicationListDto> data = list.stream()
+			.map(ApplicationListDto::new)
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(data, pageable, list.getTotalElements());
 	}
 }
