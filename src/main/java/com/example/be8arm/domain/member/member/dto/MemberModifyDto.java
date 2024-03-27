@@ -24,4 +24,5 @@ public class MemberModifyDto {
 	private String nickname;
 	private String name;
 	private String imgUrl;
+	private String address;
 }

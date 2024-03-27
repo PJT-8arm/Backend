@@ -24,6 +24,7 @@ public class MemberDto {
 	private String nickname;
 	private String name;
 	private String imgUrl;
+	private String address;
 	private ProfileDto profile;
 	@Builder.Default
 	private List<String> roles = new ArrayList<>();
@@ -42,6 +43,7 @@ public class MemberDto {
 			.name(member.getName())
 			.imgUrl(member.getImgUrl())
 			.roles(member.getRoles())
+			.address(member.getAddress())
 			.profile(profileDto).build();
 	}
 
