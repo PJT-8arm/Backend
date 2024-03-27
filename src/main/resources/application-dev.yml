@@ -29,10 +29,9 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
-jwt:
-  secret: ${jwt.secret}
-
 custom:
   site:
     name: armapp
     baseUrl: "http://localhost:${server.port}"
+  front:
+    baseUrl: "http://localhost:3000"

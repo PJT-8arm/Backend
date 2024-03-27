@@ -3,11 +3,11 @@ spring:
     group:
       dev:
         - dev
-        - jwt
+        - jwtTK
         - secret
       prod:
         - prod
-        - jwt
+        - jwtTK
         - secret
 springdoc:
   swagger-ui:

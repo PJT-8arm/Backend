@@ -1,7 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile: prod
   threads:
     virtual:
       enabled: true
@@ -28,10 +25,9 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
-jwt:
-  secret: ${jwt.secret}
-
 custom:
   site:
     name: armapp
     baseUrl: "http://api.arm.genj.me"
+  front:
+    baseUrl: "https://app.genj.me"
