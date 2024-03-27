@@ -19,7 +19,7 @@ public class CorsConfig {
 		CorsConfiguration config = new CorsConfiguration();
 
 		// 특정 도메인을 허용하고 모든 HTTP 메서드를 허용합니다.
-		config.addAllowedOrigin("https://app.arm.genj.me"); // 리액트 애플리케이션의 주소로 변경
+		config.addAllowedOrigin("https://app.genj.me"); // 리액트 애플리케이션의 주소로 변경
 		config.addAllowedMethod("*");
 		config.addAllowedHeader("*");
 		config.setAllowCredentials(true);
