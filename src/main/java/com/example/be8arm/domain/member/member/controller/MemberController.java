@@ -97,12 +97,13 @@ public class MemberController {
 	}
 
 	@GetMapping("/info")
-	public ResponseEntity<MemberDto> memberInfo(@AuthenticationPrincipal UserPrincipal user) {
-		// 현재 인증된 사용자 정보 가져오기
-		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		// String username = authentication.getName();
-		// 사용자 정보 가져오기
-		MemberDto memberDto = memberService.getMemberByUsername(user.getUsername());
+	public ResponseEntity<MemberDto> memberInfo() {
+		//현재 인증된 사용자 정보 가져오기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		//사용자 정보 가져오기
+		MemberDto memberDto = memberService.getMemberByUsername(username);
+
 
 		return ResponseEntity.ok(memberDto);
 
