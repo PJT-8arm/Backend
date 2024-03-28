@@ -173,7 +173,7 @@ public class JwtTokenProvider {
 		// 엑세스 토큰 쿠키 추가
 		Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
 		accessTokenCookie.setHttpOnly(true);
-		accessTokenCookie.setSecure(true);
+		// accessTokenCookie.setSecure(true);
 		accessTokenCookie.setPath("/");
 		accessTokenCookie.setMaxAge(60 * 60 * 24); // 1일
 		response.addCookie(accessTokenCookie);
@@ -181,7 +181,7 @@ public class JwtTokenProvider {
 		// 리프레시 토큰 쿠키 추가
 		Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
+		// refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setPath("/");
 		refreshTokenCookie.setMaxAge(60 * 60 * 24 * 2); // 2일
 		response.addCookie(refreshTokenCookie);

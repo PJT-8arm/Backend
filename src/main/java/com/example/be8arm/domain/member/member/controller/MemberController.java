@@ -3,7 +3,6 @@ package com.example.be8arm.domain.member.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,6 @@ import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
-import com.example.be8arm.global.security.UserPrincipal;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -80,7 +78,7 @@ public class MemberController {
 		// 쿠키에서 엑세스 토큰 삭제
 		Cookie accessTokenCookie = new Cookie("AccessToken", null);
 		accessTokenCookie.setHttpOnly(true);
-		accessTokenCookie.setSecure(true);
+		// accessTokenCookie.setSecure(true);
 		accessTokenCookie.setPath("/");
 		accessTokenCookie.setMaxAge(0); // 쿠키 만료
 		response.addCookie(accessTokenCookie);
@@ -88,7 +86,7 @@ public class MemberController {
 		// 쿠키에서 리프레시 토큰 삭제
 		Cookie refreshTokenCookie = new Cookie("RefreshToken", null);
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
+		// refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setPath("/");
 		refreshTokenCookie.setMaxAge(0); // 쿠키 만료
 		response.addCookie(refreshTokenCookie);
@@ -103,6 +101,8 @@ public class MemberController {
 		String username = authentication.getName();
 		//사용자 정보 가져오기
 		MemberDto memberDto = memberService.getMemberByUsername(username);
+
+
 
 
 		return ResponseEntity.ok(memberDto);
