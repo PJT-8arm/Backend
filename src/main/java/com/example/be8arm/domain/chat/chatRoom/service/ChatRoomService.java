@@ -128,10 +128,12 @@ public class ChatRoomService {
 		return chatRoomOptional.isPresent();
 	}
 
+	@Transactional
 	public void setLastViewMessageIdToLastIdByRoomId(Long roomId) {
 		chatRoomMemberRepository.updateLastViewMessageIdWhenEnterRoom(roomId);
 	}
 
+	@Transactional
 	public void setLastViewMessageIdToCurrentIdByRoomId(long roomId, Long lastMessageId) {
 		chatRoomMemberRepository.setLastViewMessageIdToCurrentIdByRoomId(roomId, lastMessageId);
 	}
