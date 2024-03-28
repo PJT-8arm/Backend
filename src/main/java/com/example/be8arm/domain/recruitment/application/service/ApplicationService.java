@@ -1,5 +1,18 @@
 package com.example.be8arm.domain.recruitment.application.service;
 
+import com.example.be8arm.domain.member.member.entity.Member;
+import com.example.be8arm.domain.member.member.repository.MemberRepository;
+import com.example.be8arm.domain.recruitment.application.dto.*;
+import com.example.be8arm.domain.recruitment.application.entity.Application;
+import com.example.be8arm.domain.recruitment.application.repository.ApplicationRepository;
+import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListDetailResponseDto;
+import com.example.be8arm.domain.recruitment.recruitment.entity.Recruitment;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -32,8 +45,7 @@ public class ApplicationService {
 	private final ApplicationRepository applicationRepository;
 
 	@Transactional
-	public ApplicationCreateResponseDto createApplication(Member member, String username,
-		ApplicationCreateRequestDto requestDto) {
+	public ApplicationCreateResponseDto createApplication(Member member, String username, ApplicationCreateRequestDto requestDto) {
 
 		Member writer = null;
 		if (requestDto.getWriterId() != null) {
@@ -54,6 +66,14 @@ public class ApplicationService {
 			.writer(writer)
 			.partner(partner)
 			.status(requestDto.getStatus())
+			.title(requestDto.getTitle())
+			.content(requestDto.getContent())
+			.recruit_date(requestDto.getRecruit_date())
+			.place(requestDto.getPlace())
+			.partnerGender(requestDto.getPartnerGender())
+			.partnerAge(requestDto.getPartnerAge())
+			.routine(requestDto.getRoutine())
+			.duration(requestDto.getDuration())
 			.build();
 
 		// 생성된 신청서를 저장합니다.
@@ -82,7 +102,7 @@ public class ApplicationService {
 			.map(ApplicationListResponseDto::new)
 			.collect(Collectors.toList());
 	}
-  
+
 	public Page<ApplicationListDto> findApplicationByMember(Member writer, Pageable pageable) {
 		Page<Application> list = applicationRepository.findByWriter(writer, pageable);
 
