@@ -78,7 +78,7 @@ public class MemberController {
 		// 쿠키에서 엑세스 토큰 삭제
 		Cookie accessTokenCookie = new Cookie("AccessToken", null);
 		accessTokenCookie.setHttpOnly(true);
-		accessTokenCookie.setSecure(true);
+		// accessTokenCookie.setSecure(true);
 		accessTokenCookie.setPath("/");
 		accessTokenCookie.setMaxAge(0); // 쿠키 만료
 		response.addCookie(accessTokenCookie);
@@ -86,7 +86,7 @@ public class MemberController {
 		// 쿠키에서 리프레시 토큰 삭제
 		Cookie refreshTokenCookie = new Cookie("RefreshToken", null);
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
+		// refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setPath("/");
 		refreshTokenCookie.setMaxAge(0); // 쿠키 만료
 		response.addCookie(refreshTokenCookie);
