@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -171,20 +172,35 @@ public class JwtTokenProvider {
 
 	private void addTokenToCookie(String accessToken, String refreshToken, HttpServletResponse response) {
 		// 엑세스 토큰 쿠키 추가
-		Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
-		accessTokenCookie.setHttpOnly(true);
+		// Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
+		// accessTokenCookie.setHttpOnly(true);
 		// accessTokenCookie.setSecure(true);
-		accessTokenCookie.setPath("/");
-		accessTokenCookie.setMaxAge(60 * 60 * 24); // 1일
-		response.addCookie(accessTokenCookie);
-
+		// accessTokenCookie.setPath("/");
+		// accessTokenCookie.setMaxAge(60 * 60 * 24); // 1일
+		// response.addCookie(accessTokenCookie);
+		ResponseCookie accessTokenCookie = ResponseCookie.from("AccessToken", accessToken) // key & value
+			.httpOnly(true)
+			.secure(true)
+			.path("/")      // path
+			.maxAge(60 * 60 * 24)
+			.sameSite("None")  // sameSite
+			.build();
+		response.addHeader("Set-Cookie", accessTokenCookie.toString()); // 쿠키를 응답 헤더에 추가
 		// 리프레시 토큰 쿠키 추가
-		Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
-		refreshTokenCookie.setHttpOnly(true);
+		// Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
+		// refreshTokenCookie.setHttpOnly(true);
 		// refreshTokenCookie.setSecure(true);
-		refreshTokenCookie.setPath("/");
-		refreshTokenCookie.setMaxAge(60 * 60 * 24 * 2); // 2일
-		response.addCookie(refreshTokenCookie);
+		// refreshTokenCookie.setPath("/");
+		// refreshTokenCookie.setMaxAge(60 * 60 * 24 * 2); // 2일
+		// response.addCookie(refreshTokenCookie);
+		ResponseCookie refreshTokenCookie = ResponseCookie.from("RefreshToken", refreshToken) // key & value
+			.httpOnly(true)
+			.secure(true)
+			.path("/")      // path
+			.maxAge(60 * 60 * 24)
+			.sameSite("None")  // sameSite
+			.build();
+		response.addHeader("Set-Cookie", refreshTokenCookie.toString()); // 쿠키를 응답 헤더에 추가
 	}
 
 	// 토큰 정보를 검증하는 메서드
