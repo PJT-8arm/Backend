@@ -201,6 +201,7 @@ public class JwtTokenProvider {
 			.sameSite("None")  // sameSite
 			.build();
 		response.addHeader("Set-Cookie", refreshTokenCookie.toString()); // 쿠키를 응답 헤더에 추가
+
 	}
 
 	// 토큰 정보를 검증하는 메서드
