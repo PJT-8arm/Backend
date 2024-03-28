@@ -3,6 +3,7 @@ package com.example.be8arm.domain.member.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import com.example.be8arm.domain.member.member.dto.SignUpDto;
 import com.example.be8arm.domain.member.member.service.MemberService;
 import com.example.be8arm.global.jwt.JwtToken;
 import com.example.be8arm.global.jwt.JwtTokenProvider;
+import com.example.be8arm.global.security.UserPrincipal;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -95,13 +97,12 @@ public class MemberController {
 	}
 
 	@GetMapping("/info")
-	public ResponseEntity<MemberDto> memberInfo() {
+	public ResponseEntity<MemberDto> memberInfo(@AuthenticationPrincipal UserPrincipal user) {
 		// 현재 인증된 사용자 정보 가져오기
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-
+		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		// String username = authentication.getName();
 		// 사용자 정보 가져오기
-		MemberDto memberDto = memberService.getMemberByUsername(username);
+		MemberDto memberDto = memberService.getMemberByUsername(user.getUsername());
 
 		return ResponseEntity.ok(memberDto);
 
