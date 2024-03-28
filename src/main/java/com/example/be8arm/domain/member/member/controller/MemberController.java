@@ -102,6 +102,9 @@ public class MemberController {
 		//사용자 정보 가져오기
 		MemberDto memberDto = memberService.getMemberByUsername(username);
 
+
+
+
 		return ResponseEntity.ok(memberDto);
 
 	}
