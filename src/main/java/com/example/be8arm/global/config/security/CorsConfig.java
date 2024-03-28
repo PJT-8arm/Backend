@@ -20,6 +20,7 @@ public class CorsConfig {
 
 		// 특정 도메인을 허용하고 모든 HTTP 메서드를 허용합니다.
 		config.addAllowedOrigin("https://app.genj.me"); // 리액트 애플리케이션의 주소로 변경
+		config.addAllowedOrigin("http://localhost:3000");
 		config.addAllowedMethod("*");
 		config.addAllowedHeader("*");
 		config.setAllowCredentials(true);

@@ -39,7 +39,7 @@ public class SignUpDto {
 	private String name;
 	private String imgUrl;
 	private String address;
-    @Builder.Default
+	@Builder.Default
 	private List<String> roles = new ArrayList<>();
 
 	public Member toEntity(String encodedPassword, List<String> roles) {
@@ -49,7 +49,7 @@ public class SignUpDto {
 			.nickname(nickname)
 			.name(name)
 			.imgUrl(imgUrl)
-				.address(address)
+			.address(address)
 			.roles(roles)
 			.build();
 	}
