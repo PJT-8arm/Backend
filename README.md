@@ -38,17 +38,6 @@
 
 ## 2. 채택한 개발 기술과 브랜치 전략
 
-### React
-
-- React
-    - 
-
-### context-api
-
--
-
-### 
-
 ### 브랜치 전략
 
 - main, develop, Feat 브랜치로 나누는 git flow 전략을 사용하여 개발을 하였습니다.
