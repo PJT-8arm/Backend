@@ -36,7 +36,7 @@
 
 <br>
 
-## 2. 브랜치 전략
+## 2. 채택한 개발 기술과 브랜치 전략
 
 ### 브랜치 전략
 
@@ -173,7 +173,17 @@
 
 ## 8. 트러블 슈팅
 
-![image](https://github.com/PJT-8arm/Backend/assets/148295292/4a0ecc16-af70-44f1-b756-9001d720ab7b)
+![image](https://github.com/PJT-8arm/Backend/assets/148295292/ffa71669-b373-4b93-ad4f-e755a2d68829)
+
+![image](https://github.com/PJT-8arm/Backend/assets/148295292/61b9c02e-fa6d-4513-9bf6-7b70bd23bf8d)
+
+![image](https://github.com/PJT-8arm/Backend/assets/148295292/62ef5f7d-40a2-4898-8c9c-f4757d780cf4)
+
+![image](https://github.com/PJT-8arm/Backend/assets/148295292/85ad6ddf-2b3b-4474-93ee-ee88a287cf2f)
+
+![image](https://github.com/PJT-8arm/Backend/assets/148295292/96be630d-2c95-4a69-a470-a1aa5f57c5f9)
+
+![image](https://github.com/PJT-8arm/Backend/assets/148295292/5b68f499-4609-472a-b796-3022b2fd78b0)
 
 
 <br>
