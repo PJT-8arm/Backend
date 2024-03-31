@@ -29,9 +29,13 @@
 
 ## 1. 개발 환경
 ![image](https://github.com/PJT-8arm/Backend/assets/148295292/a3c6ab8a-244a-452d-819f-c59989ae9ed7)
+
 ![image](https://github.com/PJT-8arm/Backend/assets/148295292/0312e134-0703-49e3-849a-4c73a567e693)
+
 ![image](https://github.com/PJT-8arm/Backend/assets/148295292/5112af56-5e87-40dc-996b-cd1657146dd2)
+
 ![image](https://github.com/PJT-8arm/Backend/assets/148295292/b7d93698-b364-49c4-a3d2-5455b495e140)
+
 ![image](https://github.com/PJT-8arm/Backend/assets/148295292/1981b49e-647e-4460-aa86-a5dfa1285b1c)
 
 <br>
