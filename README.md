@@ -1,7 +1,7 @@
 # 💪운동(헬스)을 같이 할 친구 찾는 서비스 팔뚝(8Arm)
 
 - 배포 URL : https://app.genj.me
-- Test ID : test1
+- Test ID : user1
 - Test PW : 1234
 
 <br>
