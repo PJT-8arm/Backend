@@ -64,7 +64,7 @@ public class RecruitmentController {
 
 	@PutMapping("/update/{id}") // 수정
 	public ResponseEntity<RecruitmentUpdateResponseDto> recruitmentUpdate(
-		@PathVariable Long id,
+		@PathVariable("id") Long id,
 		@AuthenticationPrincipal UserPrincipal user,
 		@RequestBody RecruitmentCreateRequestDto recruitmentUpdateRequestDto) {
 
@@ -76,7 +76,7 @@ public class RecruitmentController {
 
 	@DeleteMapping("/delete/{id}") // 삭제
 	public ResponseEntity<String> recruitmentDelete(
-		@PathVariable Long id,
+		@PathVariable("id") Long id,
 		@AuthenticationPrincipal UserPrincipal user) {
 
 		recruitmentService.deleteRecruitment(user.getMember(), id);

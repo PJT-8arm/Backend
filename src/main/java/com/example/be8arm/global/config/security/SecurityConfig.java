@@ -30,17 +30,17 @@ public class SecurityConfig {
 	private String webAppUrl;
 	private final JwtTokenProvider jwtTokenProvider;
 
+	// cors Configuration
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
+		CorsConfiguration config = new CorsConfiguration();
 
-		configuration.setAllowedOrigins(List.of(webAppUrl, "http://localhost:3000"));
-		configuration.setAllowedMethods(List.of("*"));
-		configuration.setAllowedHeaders(List.of("*"));
-		configuration.setAllowCredentials(true);
+		config.setAllowedOrigins(List.of(webAppUrl, "http://localhost:3000"));
+		config.setAllowedMethods(List.of("GET", "POST","PUT", "DELETE", "OPTIONS"));
+		config.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
+		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
 
@@ -75,8 +75,7 @@ public class SecurityConfig {
 						.requestMatchers("/members/test").hasRole("USER") // USER 권한이 있어야 요청할 수 있음
 						.anyRequest().authenticated()
 			)
-			.cors(
-				httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			// .formLogin(
 			// 	formLogin -> formLogin
 			// 		.loginPage("/members/login")
