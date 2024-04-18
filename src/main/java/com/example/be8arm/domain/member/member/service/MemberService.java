@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.be8arm.domain.member.member.dto.LogInDto;
 import com.example.be8arm.domain.member.member.dto.MemberDto;
 import com.example.be8arm.domain.member.member.dto.MemberModifyDto;
 import com.example.be8arm.domain.member.member.dto.SignUpDto;
@@ -116,5 +117,10 @@ public class MemberService {
 			throw new UsernameNotFoundException(name);
 		}
 		return member.get();
+	}
+
+	public boolean checkMember(String username, LogInDto dto) {
+		Member member = findByUsername(username);
+		return username.equals(dto.getUsername()) && passwordEncoder.matches(dto.getPassword(), member.getPassword());
 	}
 }
