@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,8 +54,7 @@ public class SecurityConfig {
 					httpbasic.disable()
 			)
 			.csrf(
-				csrf ->
-					csrf.disable()
+				AbstractHttpConfigurer::disable
 			)
 			// JWT를 사용하기 때문에 세션을 사용하지 않음
 			.sessionManagement(
@@ -76,16 +76,6 @@ public class SecurityConfig {
 						.anyRequest().authenticated()
 			)
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-			// .formLogin(
-			// 	formLogin -> formLogin
-			// 		.loginPage("/members/login")
-			// 		.defaultSuccessUrl("/")
-			// )
-			// .logout(
-			// 	logout -> logout
-			// 		.logoutUrl("/members/logout")
-			// 		.logoutSuccessUrl("/")
-			// )
 			// JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
