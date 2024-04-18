@@ -53,7 +53,7 @@ public class ChatRoomController {
 		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatRoomInfoDto.class))})
 	@ApiResponse(responseCode = "404", description = "채팅방을 찾을 수 없음")
 	@ApiResponse(responseCode = "403", description = "접근 권한이 없음")
-	public ResponseEntity<?> showRoom(@PathVariable final long roomId, @AuthenticationPrincipal UserPrincipal user) {
+	public ResponseEntity<?> showRoom(@PathVariable("roomId") final long roomId, @AuthenticationPrincipal UserPrincipal user) {
 		if (!chatRoomService.existsById(roomId)) {
 			return ResponseEntity.notFound().build();
 		}
@@ -71,7 +71,7 @@ public class ChatRoomController {
 
 	@PutMapping("/{roomId}/updateId")
 	@Operation(summary = "마지막으로 읽은 메세지 최신화")
-	public ResponseEntity<?> updateLastViewId(@PathVariable final long roomId,
+	public ResponseEntity<?> updateLastViewId(@PathVariable("roomId") final long roomId,
 		@RequestParam(value = "lastId", required = false) Long lastMessageId) {
 		if (lastMessageId == null) {
 			chatRoomService.setLastViewMessageIdToLastIdByRoomId(roomId);
@@ -85,7 +85,7 @@ public class ChatRoomController {
 	@Operation(summary = "채팅방 메세지 30개씩 반환")
 	@ApiResponse(responseCode = "200", description = "채팅메세지 반환", content = {
 		@Content(mediaType = "application/json", schema = @Schema(implementation = ChatMessagesDto.class))})
-	public ResponseEntity<?> showMessages(@PathVariable long roomId,
+	public ResponseEntity<?> showMessages(@PathVariable("roomId") long roomId,
 		@RequestParam(value = "lastId", required = false) Long lastMessageId,
 		@RequestParam(value = "page", defaultValue = "0") int page,
 		@RequestParam(value = "size", defaultValue = "30") int size) {
@@ -113,7 +113,7 @@ public class ChatRoomController {
 	@Operation(summary = "메세지 전송")
 	public ResponseEntity<?> write(
 		//TODO roomId를 request에 넣을지 말지
-		@PathVariable final long roomId, @AuthenticationPrincipal UserPrincipal user,
+		@PathVariable("roomId") final long roomId, @AuthenticationPrincipal UserPrincipal user,
 		@RequestBody final WriteRequestBody requestBody) {
 		chatMessageService.writeAndSend(roomId, user.getMember().getName(), requestBody.getContent(), "created",
 			user.getMember().getId());
@@ -125,7 +125,7 @@ public class ChatRoomController {
 	@Operation(summary = "채팅방 생성")
 	@ApiResponse(responseCode = "200", description = "채팅방 정보 반환", content = {
 		@Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))})
-	public ResponseEntity<?> makeChatRoom(@AuthenticationPrincipal UserPrincipal user, @PathVariable String theirName //
+	public ResponseEntity<?> makeChatRoom(@AuthenticationPrincipal UserPrincipal user, @PathVariable("theirName") String theirName //
 	) {
 		Member myMember = user.getMember();
 		Member theirMember = memberService.findByName(theirName);
@@ -144,7 +144,7 @@ public class ChatRoomController {
 
 	@DeleteMapping("/exit/{chatRoomId}")
 	@Operation(summary = "채팅방 나가기")
-	public ResponseEntity<?> exitChatRoom(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user) {
+	public ResponseEntity<?> exitChatRoom(@PathVariable("chatRoomId") Long chatRoomId, @AuthenticationPrincipal UserPrincipal user) {
 
 		if (!chatRoomService.isIncludeMe(user.getMember().getId(), chatRoomId)) {
 			return ResponseEntity.badRequest().body("권한이 없습니다.");
@@ -164,7 +164,7 @@ public class ChatRoomController {
 	@Operation(summary = "채팅방 이름 수정", description = "지정된 채팅방의 이름을 수정합니다.")
 	@ApiResponse(responseCode = "200", description = "성공적으로 수정됨")
 	@ApiResponse(responseCode = "400", description = "권한이 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
-	public ResponseEntity<?> modifyChatRoomName(@PathVariable Long chatRoomId,
+	public ResponseEntity<?> modifyChatRoomName(@PathVariable("chatRoomId") Long chatRoomId,
 		@AuthenticationPrincipal UserPrincipal user, @RequestBody final ModifyRequestBody modifyBody) {
 
 		if (!chatRoomService.isIncludeMe(user.getMember().getId(), chatRoomId)) {
