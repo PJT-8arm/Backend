@@ -181,6 +181,7 @@ public class JwtTokenProvider {
 		ResponseCookie accessTokenCookie = ResponseCookie.from("AccessToken", accessToken) // key & value
 			.httpOnly(true)
 			.secure(true)
+			.domain("app.genj.me")
 			.path("/")      // path
 			.maxAge(60 * 60 * 24)
 			.sameSite("None")  // sameSite
@@ -196,6 +197,7 @@ public class JwtTokenProvider {
 		ResponseCookie refreshTokenCookie = ResponseCookie.from("RefreshToken", refreshToken) // key & value
 			.httpOnly(true)
 			.secure(true)
+			.domain("app.genj.me")
 			.path("/")      // path
 			.maxAge(60 * 60 * 24)
 			.sameSite("None")  // sameSite

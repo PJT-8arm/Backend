@@ -28,6 +28,6 @@ spring:
 custom:
   site:
     name: armapp
-    baseUrl: "http://api.arm.genj.me"
+    baseUrl: "https://api.arm.genj.me"
   front:
     baseUrl: "https://app.genj.me"

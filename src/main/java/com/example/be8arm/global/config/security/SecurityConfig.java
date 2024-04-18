@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,17 +31,17 @@ public class SecurityConfig {
 	private String webAppUrl;
 	private final JwtTokenProvider jwtTokenProvider;
 
+	// cors Configuration
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
+		CorsConfiguration config = new CorsConfiguration();
 
-		configuration.setAllowedOrigins(List.of(webAppUrl, "http://localhost:3000"));
-		configuration.setAllowedMethods(List.of("*"));
-		configuration.setAllowedHeaders(List.of("*"));
-		configuration.setAllowCredentials(true);
+		config.setAllowedOrigins(List.of(webAppUrl, "http://localhost:3000"));
+		config.setAllowedMethods(List.of("GET", "POST","PUT", "DELETE", "OPTIONS"));
+		config.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
+		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
 
@@ -53,8 +54,7 @@ public class SecurityConfig {
 					httpbasic.disable()
 			)
 			.csrf(
-				csrf ->
-					csrf.disable()
+				AbstractHttpConfigurer::disable
 			)
 			// JWT를 사용하기 때문에 세션을 사용하지 않음
 			.sessionManagement(
@@ -75,18 +75,7 @@ public class SecurityConfig {
 						.requestMatchers("/members/test").hasRole("USER") // USER 권한이 있어야 요청할 수 있음
 						.anyRequest().authenticated()
 			)
-			.cors(
-				httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
-			// .formLogin(
-			// 	formLogin -> formLogin
-			// 		.loginPage("/members/login")
-			// 		.defaultSuccessUrl("/")
-			// )
-			// .logout(
-			// 	logout -> logout
-			// 		.logoutUrl("/members/logout")
-			// 		.logoutSuccessUrl("/")
-			// )
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			// JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 

@@ -85,6 +85,7 @@ public class MemberController {
 		ResponseCookie accessTokenCookie = ResponseCookie.from("AccessToken", null) // key & value
 			.httpOnly(true)
 			.secure(true)
+			.domain("app.genj.me")
 			.path("/")      // path
 			.maxAge(0)
 			.sameSite("None")  // sameSite
@@ -101,6 +102,7 @@ public class MemberController {
 		ResponseCookie refreshTokenCookie = ResponseCookie.from("RefreshToken", null) // key & value
 			.httpOnly(true)
 			.secure(true)
+			.domain("app.genj.me")
 			.path("/")      // path
 			.maxAge(0)
 			.sameSite("None")  // sameSite

@@ -19,6 +19,7 @@ import com.example.be8arm.domain.member.mypage.dto.ProfileDto;
 import com.example.be8arm.domain.member.mypage.mypageService.MypageService;
 import com.example.be8arm.domain.recruitment.application.dto.ApplicationListDto;
 import com.example.be8arm.domain.recruitment.recruitment.dto.RecruitmentListResponseDto;
+import com.example.be8arm.global.exceptions.UserException;
 import com.example.be8arm.global.security.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;
@@ -36,79 +37,88 @@ public class MypageController {
 	//todo 보류. GET 회원정보 수정 전 비밀번호 재확인 페이지 - 데이터=username
 	//todo 보류. POST 회원정보 수정 전 비밀번호 재확인 페이지
 
+	// 회원정보 제공
 	@GetMapping("/modify")
 	public ResponseEntity<?> mypageDetails(@AuthenticationPrincipal UserPrincipal member) {
-
-		// todo 예외 적용 필요 - 24.3.11
-		MemberDto dto = MemberDto.toDto(memberService.findByUsername(member.getUsername()));
-		ResponseEntity<MemberDto> responseEntity = ResponseEntity.ok(dto);
+		ResponseEntity<?> responseEntity;
+		try{
+			MemberDto dto = MemberDto.toDto(memberService.findByUsername(member.getUsername()));
+			responseEntity = ResponseEntity.ok(dto);
+		}catch(Exception e){
+			responseEntity = ResponseEntity.ofNullable(e.getMessage());
+		}
 		return responseEntity;
 	}
 
+	// 회원정보 변경
 	@PostMapping("/modify")
-	public ResponseEntity<SignUpDto> mypageModifyDetails(@AuthenticationPrincipal UserPrincipal member,
+	public ResponseEntity<?> mypageModifyDetails(@AuthenticationPrincipal UserPrincipal member,
 		@RequestBody MemberModifyDto memberModifyDto) {
-		ResponseEntity<SignUpDto> responseEntity;
+		ResponseEntity<?> responseEntity;
 		try {
 			SignUpDto dto = memberService.modifyDetails(member.getUsername(), memberModifyDto);
 			responseEntity = ResponseEntity.ok(dto);
 		} catch (Exception e) {
-			responseEntity = ResponseEntity.badRequest().build();
+			responseEntity = ResponseEntity.ofNullable(e.getMessage());
 		}
 		return responseEntity;
 	}
 
 	@GetMapping("/profile")
-	public ResponseEntity<ProfileDto> mypageProfile(@AuthenticationPrincipal UserPrincipal member) {
-		ResponseEntity<ProfileDto> responseEntity;
-
+	public ResponseEntity<?> mypageProfile(@AuthenticationPrincipal UserPrincipal member) {
+		ResponseEntity<?> responseEntity;
 		try {
 			ProfileDto dto = mypageService.getProfile(member.getUsername());
 			responseEntity = ResponseEntity.ok(dto);
 		} catch (Exception e) {
-			responseEntity = ResponseEntity.badRequest().build();
+			responseEntity = ResponseEntity.ofNullable(e.getMessage());
 		}
 		return responseEntity;
 	}
 
 	@PostMapping("/profile")
-	public ResponseEntity<ProfileDto> mypageModifyProfile(@AuthenticationPrincipal UserPrincipal member,
+	public ResponseEntity<?> mypageModifyProfile(@AuthenticationPrincipal UserPrincipal member,
 		@RequestBody ProfileDto profileDto) {
-		ResponseEntity<ProfileDto> responseEntity;
+		ResponseEntity<?> responseEntity;
 		try {
 			ProfileDto dto = mypageService.modifyProfile(member.getUsername(), profileDto);
 			responseEntity = ResponseEntity.ok(dto);
 		} catch (Exception e) {
-			responseEntity = ResponseEntity.badRequest().build();
+			responseEntity = ResponseEntity.ofNullable(e.getMessage());
 		}
 		return responseEntity;
 	}
 
 	@GetMapping("/myRecruitment")
-	public ResponseEntity<Page<RecruitmentListResponseDto>> mypageMyRecruitment(
+	public ResponseEntity<?> mypageMyRecruitment(
 		@AuthenticationPrincipal UserPrincipal memberPrincipal,
 		@RequestParam(name = "page") int page) {
-		ResponseEntity<Page<RecruitmentListResponseDto>> responseEntity;
+		ResponseEntity<?> responseEntity;
 		try {
 			Member member = memberService.findByUsername(memberPrincipal.getUsername());
 			// page 적용
 			Page<RecruitmentListResponseDto> recruitmentList = mypageService.findMyRecruitment(member, page);
 			responseEntity = ResponseEntity.ok(recruitmentList);
 		} catch (Exception e) {
-			responseEntity = ResponseEntity.badRequest().build();
+			responseEntity = ResponseEntity.ofNullable(e.getMessage());
 		}
 		return responseEntity;
 	}
 
 	@GetMapping("/myApplication")
-	public ResponseEntity<Page<ApplicationListDto>> mypageMyApplication(
+	public ResponseEntity<?> mypageMyApplication(
 		@AuthenticationPrincipal UserPrincipal memberPrincipal,
 		@RequestParam(name = "page") int page) {
-		ResponseEntity<Page<ApplicationListDto>> responseEntity;
-		Member member = memberService.findByUsername(memberPrincipal.getUsername());
-		// page 적용
-		Page<ApplicationListDto> applicationList = mypageService.findMyApplication(member, page);
-		responseEntity = ResponseEntity.ok(applicationList);
+		ResponseEntity<?> responseEntity;
+		try{
+			Member member = memberService.findByUsername(memberPrincipal.getUsername());
+			// page 적용
+			Page<ApplicationListDto> applicationList = mypageService.findMyApplication(member, page);
+			responseEntity = ResponseEntity.ok(applicationList);
+		} catch(Exception e){
+			responseEntity = ResponseEntity.ofNullable(e.getMessage());
+		}
+
 		return responseEntity;
 	}
 }
